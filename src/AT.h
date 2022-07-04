@@ -54,6 +54,10 @@ public:
   status_code_t waitString(const char *str, uint32_t timeout);
   status_code_t sendString(const char *str, size_t len);
   status_code_t sendString(char *str, size_t len);
+  size_t readString();
+  char read();
+  int available();
+  void setTimeout(uint32_t to);
 
   char *getBuff();
   uint32_t getErrno();

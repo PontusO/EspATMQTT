@@ -20,6 +20,8 @@
 #include <inttypes.h>
 #include <AT.h>
 
+#define AT_CMD_BUFFER_SIZE              1024
+
 /* MQTT configuration schemes */
 typedef enum mqtt_scheme_e {
   ESP_MQTT_SCHEME_MQTT_OVER_TCP                   = 1, // MQTT over TCP.
@@ -122,6 +124,8 @@ typedef enum mqtt_error_e {
 
 #define MQTT_ERROR(x)                     (x & 0xffff)
 
+typedef void (*subscription_cb_t)(char * topic, char * mqttdata);
+
 /*******************************************************************************
  * EspAT MQTT class definition
  ******************************************************************************/
@@ -131,11 +135,16 @@ public:
 
   status_code_t begin();
   status_code_t UserConfig(uint32_t linkID, mqtt_scheme_t scheme, const char *clientID,
-                           const char *userName, const char *password,
-                           uint32_t certKeyID, uint32_t caID,
-                           const char *path);
-  status_code_t UserConfig(uint32_t linkID, mqtt_scheme_t scheme,
-                           const char *clientID);
+                           const char *userName="", const char *password="",
+                           uint32_t certKeyID=0, uint32_t caID=0,
+                           const char *path="");
+  status_code_t UserConfig(uint32_t linkID, mqtt_scheme_t scheme, char *clientID,
+                           const char *userName="", const char *password="",
+                           uint32_t certKeyID=0, uint32_t caID=0,
+                           const char *path="");
+  status_code_t UserConfig(uint32_t linkID, mqtt_scheme_t scheme, char *clientID,
+                           char *userName, char *password, uint32_t certKeyID=0,
+                           uint32_t caID=0, const char *path="");
   status_code_t Connect(uint32_t linkID, const char *host,
                            uint32_t port=1883, uint32_t reconnect=1);
   status_code_t pubString(uint32_t linkID, const char *topic, const char *data,
@@ -146,10 +155,14 @@ public:
                            uint32_t qos=0, uint32_t retain=0);
   status_code_t pubRaw(uint32_t linkID, const char *topic, char *data,
                            uint32_t qos=0, uint32_t retain=0);
+  status_code_t subscribeTopic(subscription_cb_t cb, uint32_t linkID, const char * topic, uint32_t qos=0);
+  status_code_t subscribeTopic(subscription_cb_t cb, uint32_t linkID, char * topic, uint32_t qos=0);
+  void process();
 private:
   AT_Class *at;
+  subscription_cb_t subscription_callback;
 
-  char buff[1024];
+  char buff[AT_CMD_BUFFER_SIZE];
 };
 
 #endif

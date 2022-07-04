@@ -58,9 +58,9 @@ status_code_t EspATMQTT::begin() {
 
 //------------------------------------------------------------------------------
 status_code_t EspATMQTT::UserConfig(uint32_t linkID, mqtt_scheme_t scheme,
-                           const char *clientID, const char *userName,
-                           const char *password, uint32_t certKeyID, uint32_t caID,
-                           const char *path) {
+                         const char *clientID, const char *userName,
+                         const char *password, uint32_t certKeyID, uint32_t caID,
+                         const char *path) {
 
  sprintf(buff, "=%d,%d,\"%s\",\"%s\",\"%s\",%d,%d,\"%s\"", linkID,
          (uint32_t)scheme, clientID, userName, password, certKeyID, caID, path);
@@ -70,42 +70,51 @@ status_code_t EspATMQTT::UserConfig(uint32_t linkID, mqtt_scheme_t scheme,
 
 //------------------------------------------------------------------------------
 status_code_t EspATMQTT::UserConfig(uint32_t linkID, mqtt_scheme_t scheme,
-                                    const char *clientID) {
+                         char *clientID, const char *userName,
+                         const char *password, uint32_t certKeyID, uint32_t caID,
+                         const char *path) {
 
  sprintf(buff, "=%d,%d,\"%s\",\"%s\",\"%s\",%d,%d,\"%s\"", linkID,
-         (uint32_t)scheme, clientID, "", "", 0, 0, "");
+         (uint32_t)scheme, clientID, userName, password, certKeyID, caID, path);
+
+ return at->sendCommand("+MQTTUSERCFG", buff, NULL);
+}
+
+//------------------------------------------------------------------------------
+status_code_t EspATMQTT::UserConfig(uint32_t linkID, mqtt_scheme_t scheme,
+                         char *clientID, char *userName, char *password,
+                         uint32_t certKeyID, uint32_t caID, const char *path) {
+
+ sprintf(buff, "=%d,%d,\"%s\",\"%s\",\"%s\",%d,%d,\"%s\"", linkID,
+         (uint32_t)scheme, clientID, userName, password, certKeyID, caID, path);
 
  return at->sendCommand("+MQTTUSERCFG", buff, NULL);
 }
 
 //------------------------------------------------------------------------------
 status_code_t EspATMQTT::Connect(uint32_t linkID, const char *host,
-                                 uint32_t port, uint32_t reconnect)
-{
+                                 uint32_t port, uint32_t reconnect) {
   sprintf(buff, "=%d,\"%s\",%d,%d", linkID, host, port, reconnect);
   return at->sendCommand("+MQTTCONN", buff, NULL);
 }
 
 //------------------------------------------------------------------------------
 status_code_t EspATMQTT::pubString(uint32_t linkID, const char *topic,
-                         const char *data, uint32_t qos, uint32_t retain)
-{
+                         const char *data, uint32_t qos, uint32_t retain) {
   sprintf(buff, "=%d,\"%s\",\"%s\",%d,%d", linkID, topic, data, qos, retain);
   return at->sendCommand("+MQTTPUB", buff, NULL);
 }
 
 //------------------------------------------------------------------------------
 status_code_t EspATMQTT::pubString(uint32_t linkID, const char *topic, char *data,
-                         uint32_t qos, uint32_t retain)
-{
+                         uint32_t qos, uint32_t retain) {
   sprintf(buff, "=%d,\"%s\",\"%s\",%d,%d", linkID, topic, data, qos, retain);
   return at->sendCommand("+MQTTPUB", buff, NULL);
 }
 
 //------------------------------------------------------------------------------
 status_code_t EspATMQTT::pubRaw(uint32_t linkID, const char *topic, const char *data,
-                         uint32_t qos, uint32_t retain)
-{
+                         uint32_t qos, uint32_t retain) {
   status_code_t status;
 
   size_t len = strlen(data);
@@ -128,8 +137,7 @@ status_code_t EspATMQTT::pubRaw(uint32_t linkID, const char *topic, const char *
 
 //------------------------------------------------------------------------------
 status_code_t EspATMQTT::pubRaw(uint32_t linkID, const char *topic, char *data,
-                         uint32_t qos, uint32_t retain)
-{
+                         uint32_t qos, uint32_t retain) {
   status_code_t status;
 
   size_t len = strlen(data);
@@ -148,4 +156,76 @@ status_code_t EspATMQTT::pubRaw(uint32_t linkID, const char *topic, char *data,
     return (status_code_t)AT_MQTT_FAILED_TO_PUBLISH_RAW;
   }
   return ESP_AT_SUB_OK;
+}
+
+//------------------------------------------------------------------------------
+status_code_t EspATMQTT::subscribeTopic(subscription_cb_t cb, uint32_t linkID,
+              const char * topic, uint32_t qos) {
+  sprintf(buff,"=%d,\"%s\",%d", linkID, topic, qos);
+  subscription_callback = cb;
+  return at->sendCommand("+MQTTSUB", buff, NULL);
+}
+
+//------------------------------------------------------------------------------
+status_code_t EspATMQTT::subscribeTopic(subscription_cb_t cb, uint32_t linkID,
+              char * topic, uint32_t qos) {
+  sprintf(buff,"=%d,\"%s\",%d", linkID, topic, qos);
+  subscription_callback = cb;
+  return at->sendCommand("+MQTTSUB", buff, NULL);
+}
+
+//------------------------------------------------------------------------------
+void EspATMQTT::process() {
+
+  if (at->available()) {
+  char ch;
+    // The MQTTSUBRECV URC does not have a line ending which means we need to
+    // to perform immediate parsing while reading the line.
+    ch = at->read();
+    if (ch == '+') {
+      int ptr = 0;
+
+      do {
+        ch = at->read();
+        buff[ptr++] = ch;
+      } while (ch != ':');
+      buff[ptr] = '\0';
+      if (strstr(&buff[0], "MQTTSUBRECV:")) {
+        // We need to read each section of this line until we have read the
+        // length of the data after which we can read the remainder of the line.
+        // This is so dumb, it is a line based protocol and it should have had
+        // cr/lf at the end of the line just like everything else.
+        do {
+          ch = at->read();
+          buff[ptr++] = ch;
+        } while (ch != ',' && ch != -1);
+        // Now read the topic
+        do {
+          ch = at->read();
+          buff[ptr++] = ch;
+        } while (ch != ',' && ch != -1);
+        // And at last we get to the number of characters in the response
+        int lenPtr = ptr;   // Save a pointer to the length
+        do {
+          ch = at->read();
+          buff[ptr++] = ch;
+        } while (ch != ',' && ch != -1);
+        int len = strtol(&buff[lenPtr], NULL, 10);
+        while(len--) {
+          ch = at->read();
+          buff[ptr++] = ch;
+        }
+
+        // Tokenize the data as required
+        const char s[2] = ",";
+        char *tok = strtok(&buff[0], s);
+        char *topic = strtok(NULL, s);
+        tok = strtok(NULL, s);
+        char *mqttdata = strtok(NULL, s);
+        if (subscription_callback) {
+          subscription_callback(topic, mqttdata);
+        }
+      }
+    }
+  }
 }

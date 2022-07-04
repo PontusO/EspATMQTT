@@ -15,7 +15,7 @@
  * ----------------------------------------------------------------------------
  */
 // Enable if you need debug print outs on the serial terminal.
-#define DEBUG     0
+#define DEBUG     1
 
 #include <debug.h>
 #include <AT.h>
@@ -151,7 +151,6 @@ status_code_t AT_Class::waitString(const char *str, uint32_t timeout) {
 
   wx = 0;
   line = 0;
-
   do {
     tx = wx;
     readLine();
@@ -172,4 +171,22 @@ status_code_t AT_Class::sendString(char *str, size_t len) {
 
 char *AT_Class::getBuff() {
   return buff;
+}
+
+char AT_Class::read() {
+  char ch;
+
+  do {
+    ch = _serial->read();
+  } while (ch == 255);
+
+  return ch;
+}
+
+int AT_Class::available() {
+  return _serial->available();
+}
+
+void AT_Class::setTimeout(uint32_t to) {
+  _serial->setTimeout(to);
 }
