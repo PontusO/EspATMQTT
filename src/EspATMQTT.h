@@ -20,7 +20,7 @@
 #include <inttypes.h>
 #include <AT.h>
 
-#define AT_CMD_BUFFER_SIZE              1024
+#define MQTT_BUFFER_SIZE              1024
 
 /* MQTT configuration schemes */
 typedef enum mqtt_scheme_e {
@@ -122,47 +122,91 @@ typedef enum mqtt_error_e {
   AT_MQTT_FAILED_TO_PUBLISH_RAW           = 0x6053
 } mqtt_error_t;
 
+typedef enum mqtt_connectType_e {
+  AT_CONN_UNCONNECTED                     = 0x1000,
+  AT_CONN_SYNCH                           = 0x1001,
+  AT_CONN_ASYNCH                          = 0x1002
+} mqtt_connectType_t;
+
 #define MQTT_ERROR(x)                     (x & 0xffff)
 
-typedef void (*subscription_cb_t)(char * topic, char * mqttdata);
+#define DEFAULT_LINK_ID                   0
 
+typedef void (*subscription_cb_t)(char *topic, char *mqttdata);
+typedef void (*validDateTime_cb_t)(char *dateTime);
+typedef void (*connected_cb_t)(char *connectionString);
+
+typedef uint32_t            mqtt_status_t;
 /*******************************************************************************
- * EspAT MQTT class definition
+ * EspAT MQTT EspATMQTT class definition
  ******************************************************************************/
 class EspATMQTT {
 public:
   EspATMQTT(HardwareSerial* = &ESP_SERIAL_PORT);
 
-  status_code_t begin();
-  status_code_t UserConfig(uint32_t linkID, mqtt_scheme_t scheme, const char *clientID,
+  mqtt_status_t begin();
+  mqtt_status_t userConfig(uint32_t linkID, mqtt_scheme_t scheme, const char *clientID,
                            const char *userName="", const char *password="",
                            uint32_t certKeyID=0, uint32_t caID=0,
                            const char *path="");
-  status_code_t UserConfig(uint32_t linkID, mqtt_scheme_t scheme, char *clientID,
+  mqtt_status_t userConfig(uint32_t linkID, mqtt_scheme_t scheme, char *clientID,
                            const char *userName="", const char *password="",
                            uint32_t certKeyID=0, uint32_t caID=0,
                            const char *path="");
-  status_code_t UserConfig(uint32_t linkID, mqtt_scheme_t scheme, char *clientID,
+  mqtt_status_t userConfig(uint32_t linkID, mqtt_scheme_t scheme, char *clientID,
                            char *userName, char *password, uint32_t certKeyID=0,
                            uint32_t caID=0, const char *path="");
-  status_code_t Connect(uint32_t linkID, const char *host,
-                           uint32_t port=1883, uint32_t reconnect=1);
-  status_code_t pubString(uint32_t linkID, const char *topic, const char *data,
+  mqtt_status_t connect(uint32_t linkID, const char *host,
+                           uint32_t port=1883, uint32_t reconnect=1,
+                           uint32_t timeout = 5000, connected_cb_t cb = NULL);
+  mqtt_status_t clientID(uint32_t linkID, const char *clientID);
+  mqtt_status_t clientID(uint32_t linkID, char *clientID);
+  mqtt_status_t username(uint32_t linkID, const char *username);
+  mqtt_status_t username(uint32_t linkID, char *username);
+  mqtt_status_t password(uint32_t linkID, const char *password);
+  mqtt_status_t password(uint32_t linkID, char *password);
+  mqtt_status_t connectionConfig(uint32_t linkID, uint32_t keepalive,
+                           uint32_t disable_clean_session, const char* lwt_topic,
+                           const char* lwt_message, uint32_t lwt_qos = 0,
+                           uint32_t lwt_retain = 0);
+  mqtt_status_t setALPN(uint32_t linkID, const char *alpn1 = NULL,
+                                         const char *alpn2 = NULL,
+                                         const char *alpn3 = NULL,
+                                         const char *alpn4 = NULL,
+                                         const char *alpn5 = NULL);
+  mqtt_status_t pubString(uint32_t linkID, const char *topic, const char *data,
                            uint32_t qos=0, uint32_t retain=0);
-  status_code_t pubString(uint32_t linkID, const char *topic, char *data,
+  mqtt_status_t pubString(uint32_t linkID, const char *topic, char *data,
                            uint32_t qos=0, uint32_t retain=0);
-  status_code_t pubRaw(uint32_t linkID, const char *topic, const char *data,
+  mqtt_status_t pubRaw(uint32_t linkID, const char *topic, const char *data,
                            uint32_t qos=0, uint32_t retain=0);
-  status_code_t pubRaw(uint32_t linkID, const char *topic, char *data,
+  mqtt_status_t pubRaw(uint32_t linkID, const char *topic, char *data,
                            uint32_t qos=0, uint32_t retain=0);
-  status_code_t subscribeTopic(subscription_cb_t cb, uint32_t linkID, const char * topic, uint32_t qos=0);
-  status_code_t subscribeTopic(subscription_cb_t cb, uint32_t linkID, char * topic, uint32_t qos=0);
+  mqtt_status_t subscribeTopic(subscription_cb_t cb, uint32_t linkID, const char * topic, uint32_t qos=0);
+  mqtt_status_t subscribeTopic(subscription_cb_t cb, uint32_t linkID, char * topic, uint32_t qos=0);
+  mqtt_status_t unSubscribeTopic(uint32_t linkID, const char * topic);
+  mqtt_status_t unSubscribeTopic(uint32_t linkID, char * topic);
+  mqtt_status_t close(uint32_t linkID);
+
+  // Non MQTT stuff but needed or usefull to get things going
+  mqtt_status_t enableNTPTime(bool enable, validDateTime_cb_t cb, uint32_t timezone,
+                           const char *ts1 = NULL, const char *ts2 = NULL,
+                           const char *ts3 = NULL);
+  mqtt_status_t getNTPTime(char **time);
+  bool isConnected();
   void process();
 private:
   AT_Class *at;
-  subscription_cb_t subscription_callback;
+  subscription_cb_t subscription_cb;
+  validDateTime_cb_t validDateTime_cb;
+  mqtt_connectType_t connType;
+  connected_cb_t connected_cb;
 
-  char buff[AT_CMD_BUFFER_SIZE];
+  int topicSubscriptions;
+  bool connected;
+  bool ntpTimeValid;
+
+  char buff[MQTT_BUFFER_SIZE];
 };
 
 #endif
