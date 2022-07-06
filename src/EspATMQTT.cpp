@@ -45,12 +45,28 @@ const char *AT_CMD_CIPSNTPCFG           = "+CIPSNTPCFG";
 const char *AT_CMD_CIPSNTPTIME          = "+CIPSNTPTIME";
 
 const char *AT_RESP_CIPSNTPTIME         = "+CIPSNTPTIME:";
-//------------------------------------------------------------------------------
+
+/*******************************************************************************
+ *
+ * The module constructor allows you to select what serial port that should be
+ * used to communicate with the ESP-AT module.
+ *
+ * @param - serial The serial port that is connected to the ESP-AT module.
+ *
+ ******************************************************************************/
 EspATMQTT::EspATMQTT(HardwareSerial* serial) {
   at = new AT_Class(serial);
 }
 
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * The begin method initializes the system before usage. It must be called
+ * before running any other methods of this library.
+ *
+ * @return - The status of the operation, @see mqtt_status_t for more
+ *           information.
+ *
+ ******************************************************************************/
 mqtt_status_t EspATMQTT::begin() {
   char *strResult;
 
@@ -79,7 +95,7 @@ mqtt_status_t EspATMQTT::begin() {
   result = strtol(strResult, NULL, 10);
   dprintf("Syslog int = %d\n", result);
   if (!result) {
-    Serial.printf("Could not update SYSLOG, please check your system.");
+    dprintf("Could not update SYSLOG, please check your system.", NULL);
     return ESP_AT_SUB_CMD_ERROR;
   }
   return ESP_AT_SUB_OK;

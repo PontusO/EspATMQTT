@@ -24,18 +24,30 @@
 static const char *STR_OK         = "OK";
 static const char *STR_ERROR      = "ERROR";
 static const char *STR_ERR_CODE   = "ERR CODE:";
+
+/*******************************************************************************
+ *
+ * The class constructor is used to set the serial port to be used to
+ * communicate with the ESP-AT device.
+ *
+ * @param - serial The serial port that the ESP device is connected to.
+ *
+ ******************************************************************************/
 AT_Class::AT_Class(HardwareSerial* serial) {
    _serial = serial;
 }
 
-//------------------------------------------------------------------------------
-/*
+/*******************************************************************************
+ *
  * Read exactly one line from the serial port.
  * Each line that is read is appended to the internal buffer to create a
  * internal processable response. CR and LF's are removed and replaced with
  * a '|' character to separate the lines in the buffer. This can then later
  * be process using strok or a similar function.
- */
+ *
+ * @return The number of characters read from the serial port.
+ *
+ ******************************************************************************/
 size_t AT_Class::readLine() {
   size_t cnt = 0;
   char ch = 0;
@@ -56,8 +68,8 @@ size_t AT_Class::readLine() {
   return cnt;
 }
 
-//------------------------------------------------------------------------------
-/*
+/*******************************************************************************
+ *
  * Read all lines until the end of the AT command sequence
  * All lines are stored in buff[] separated with a | character so you can use
  * strtok later on.
@@ -69,7 +81,15 @@ size_t AT_Class::readLine() {
  * the timeout has elapsed in case of unstable or extremely slow networks.
  * In this case it is important to make sure it is taken care of in the mqtt
  * process() function.
- */
+ *
+ * @param - asynch Any asynchronous data that is required. Can be NULL if
+ *          no asynchronous data is expected.
+ * @param - timeout The maximum amount of time (in milliseconds) that is allowed
+ *          before a response is expected. If data has not arrived within the
+ *          alloted time the function will return with a timeout error message.
+ *
+ * @return The status of the operations as defined by status_code_e.
+ ******************************************************************************/
 at_status_t AT_Class::waitReply(const char *asynch, uint32_t timeout) {
   size_t tx = 0;
   at_status_t errno = ESP_AT_SUB_OK;

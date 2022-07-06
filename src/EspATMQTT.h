@@ -14,6 +14,9 @@
  * this stuff is worth it, you can buy me a beer in return - Pontus Oldberg
  * ----------------------------------------------------------------------------
  */
+
+/** @file */
+
 #ifndef _H_ESPATMQTT_
 #define _H_ESPATMQTT_
 
@@ -22,22 +25,30 @@
 
 #define MQTT_BUFFER_SIZE              1024
 
-/* MQTT configuration schemes */
+/**
+ * @var MQTT configuration schemes
+ */
 typedef enum mqtt_scheme_e {
-  ESP_MQTT_SCHEME_MQTT_OVER_TCP                   = 1, // MQTT over TCP.
-  ESP_MQTT_SCHEME_MQTT_OVER_TLS_NCV               = 2, // MQTT over TLS (no certificate verification).
-  ESP_MQTT_SCHEME_MQTT_OVER_TLS_VSC               = 3, // MQTT over TLS (verify server certificate).
-  ESP_MQTT_SCHEME_MQTT_OVER_TLS_PCC               = 4, // MQTT over TLS (provide client certificate).
-  ESP_MQTT_SCHEME_MQTT_OVER_TLS_VSCPCC            = 5, // MQTT over TLS (verify server certificate and provide client certificate).
-  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP                = 6, // MQTT over WebSocket (based on TCP).
-  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP_SEC_TLS_NCV    = 7, // MQTT over WebSocket Secure (based on TLS, no certificate verification).
-  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP_SEC_TLS_VSC    = 8, // MQTT over WebSocket Secure (based on TLS, verify server certificate).
-  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP_SEC_TLS_PCC    = 9, // MQTT over WebSocket Secure (based on TLS, provide client certificate).
-  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP_SEC_TLS_VSCPCC = 10 // MQTT over WebSocket Secure (based on TLS, verify server certificate and provide client certificate).
+  ESP_MQTT_SCHEME_MQTT_OVER_TCP                   = 1, /**< MQTT over TCP. */
+  ESP_MQTT_SCHEME_MQTT_OVER_TLS_NCV               = 2, /**< MQTT over TLS (no certificate verification). */
+  ESP_MQTT_SCHEME_MQTT_OVER_TLS_VSC               = 3, /**< MQTT over TLS (verify server certificate). */
+  ESP_MQTT_SCHEME_MQTT_OVER_TLS_PCC               = 4, /**< MQTT over TLS (provide client certificate). */
+  ESP_MQTT_SCHEME_MQTT_OVER_TLS_VSCPCC            = 5, /**< MQTT over TLS (verify server certificate and provide client certificate). */
+  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP                = 6, /**< MQTT over WebSocket (based on TCP). */
+  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP_SEC_TLS_NCV    = 7, /**< MQTT over WebSocket Secure (based on TLS, no certificate verification). */
+  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP_SEC_TLS_VSC    = 8, /**< MQTT over WebSocket Secure (based on TLS, verify server certificate). */
+  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP_SEC_TLS_PCC    = 9, /**< MQTT over WebSocket Secure (based on TLS, provide client certificate). */
+  ESP_MQTT_SCHEME_MQTT_OVER_WS_TCP_SEC_TLS_VSCPCC = 10 /**< MQTT over WebSocket Secure (based on TLS, verify server certificate and provide client certificate). */
 } mqtt_scheme_t;
 
-typedef enum mqtt_error_e {
-  AT_MQTT_NO_CONFIGURED                   = 0x6001,
+/**
+ * @var Errors returned by the MQTT stack inside the ESP32
+ *
+ * Be aware of that the documentation from Espressif regarding these error
+ * codes is vague and the explanations here might not be 100% correct.
+ */
+enum mqtt_error_e {
+  AT_MQTT_NO_CONFIGURED                   = 0x6001, /**< MQTT server not configured yet */
   AT_MQTT_NOT_IN_CONFIGURED_STATE         = 0x6002,
   AT_MQTT_UNINITIATED_OR_ALREADY_CLEAN    = 0x6003,
   AT_MQTT_ALREADY_CONNECTED               = 0x6004,
@@ -120,7 +131,7 @@ typedef enum mqtt_error_e {
   AT_MQTT_IN_DISCONNECTED_STATE           = 0x6051,
   AT_MQTT_HOSTNAME_VERIFY_FAILED          = 0x6052,
   AT_MQTT_FAILED_TO_PUBLISH_RAW           = 0x6053
-} mqtt_error_t;
+};
 
 typedef enum mqtt_connectType_e {
   AT_CONN_UNCONNECTED                     = 0x1000,
@@ -136,7 +147,13 @@ typedef void (*subscription_cb_t)(char *topic, char *mqttdata);
 typedef void (*validDateTime_cb_t)(char *dateTime);
 typedef void (*connected_cb_t)(char *connectionString);
 
+/**
+ * The return value of an ESP-AT MQTT operation. This value is a combination of
+ * the enums mqtt_error_e and mqtt_error_e. The caller should check for both to
+ * determine the cause of the error.
+ */
 typedef uint32_t            mqtt_status_t;
+
 /*******************************************************************************
  * EspAT MQTT EspATMQTT class definition
  ******************************************************************************/
