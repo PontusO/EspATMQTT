@@ -8,10 +8,25 @@
  *                       |_|______\__,_|_.__/|___/
  *
  * ----------------------------------------------------------------------------
- * "THE BEER-WARE LICENSE" (Revision 42):
- * <pontus@ilabs.se> wrote this file. As long as you retain this notice you
- * can do whatever you want with this stuff. If we meet some day, and you think
- * this stuff is worth it, you can buy me a beer in return - Pontus Oldberg
+  Copyright (c) 2022 iLabs - Pontus Oldberg
+
+  Permission is hereby granted, free of charge, to any person obtaining a copy
+  of this software and associated documentation files (the "Software"), to deal
+  in the Software without restriction, including without limitation the rights
+  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  copies of the Software, and to permit persons to whom the Software is
+  furnished to do so, subject to the following conditions:
+
+  The above copyright notice and this permission notice shall be included in all
+  copies or substantial portions of the Software.
+
+  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  SOFTWARE.
  * ----------------------------------------------------------------------------
  */
 // Enable if you need debug print outs on the serial terminal.
@@ -30,7 +45,7 @@ static const char *STR_ERR_CODE   = "ERR CODE:";
  * The class constructor is used to set the serial port to be used to
  * communicate with the ESP-AT device.
  *
- * @param - serial The serial port that the ESP device is connected to.
+ * @param[in] - serial The serial port that the ESP device is connected to.
  *
  ******************************************************************************/
 AT_Class::AT_Class(HardwareSerial* serial) {
@@ -82,13 +97,17 @@ size_t AT_Class::readLine() {
  * In this case it is important to make sure it is taken care of in the mqtt
  * process() function.
  *
- * @param - asynch Any asynchronous data that is required. Can be NULL if
+ * @param[in] - asynch
+ *          Any asynchronous data that is required. Can be NULL if
  *          no asynchronous data is expected.
- * @param - timeout The maximum amount of time (in milliseconds) that is allowed
+ * @param[in] - timeout
+ *          The maximum amount of time (in milliseconds) that is allowed
  *          before a response is expected. If data has not arrived within the
  *          alloted time the function will return with a timeout error message.
  *
- * @return The status of the operations as defined by status_code_e.
+ * @return - The status of the operation, @see mqtt_status_e for more
+ *           information.
+ *
  ******************************************************************************/
 at_status_t AT_Class::waitReply(const char *asynch, uint32_t timeout) {
   size_t tx = 0;
@@ -146,7 +165,48 @@ at_status_t AT_Class::waitReply(const char *asynch, uint32_t timeout) {
 }
 
 
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * This function sends the specified AT command and parameters to the ESP-AT
+ * device on the serial line. The function adds the "AT" part of the command
+ * so this must not be a part of the command string when calling the function.
+ *
+ * It then waits for the AT response to come back from the ESP-AT device and
+ * returns with the result of the operation. It also detects if the ESP-AT
+ * device does not return a reply within the specified time limit.
+ *
+ * @param[in] - cmd
+ *          The AT command that should be executed (without the AT part).
+ *          No <CR> or <LF> characters must be present in this string.
+ *          Example: "+GMR" (Returns the firmware version)
+ * @param[in] - param
+ *          This is the parameter part of the AT command. It should hold
+ *          all the necessary and relevant parameters of the AT command.
+ *          No <CR> or <LF> characters must be present in this string.
+ *          Example "=0,1,"alpn.ilabs.se""
+ * @param[out] - result
+ *          When an AT command returns a parameter as a result of the operation
+ *          the AT handler takes care of this and can be returned to the caller.
+ *          By supplying a non NULL ptrptr the caller can get access to this
+ *          parameter. If this parameter is NULL the result is simply discarded.
+ * @param[in] - asynch
+ *          Some AT commands return their result completely asynchronous to the
+ *          OK or ERROR reply and also with a completely different URC tag.
+ *          For instance the command "AT+MQTTCONN=" can return the response
+ *          "+MQTTCONNECTED:" both before and after the OK response.
+ *          In this case by setting this parameter to "+MQTTCONNECTED:" the
+ *          function will look for this data both when waiting for the OK
+ *          response as well as after the OK response has been received or a
+ *          timeout has occured.
+ * @param[in] - timeout
+ *          The amount of time, in milliseconds, that the function will wait
+ *          for a reply from the ESP-AT device. This value is also used when
+ *          waiting for an asynchronous response.
+ *
+ * @return - The status of the operation, @see mqtt_status_e for more
+ *           information.
+ *
+ ******************************************************************************/
 at_status_t AT_Class::sendCommand(const char *cmd, const char *param,
                                     char **result, const char *asynch,
                                     uint32_t timeout) {
@@ -184,24 +244,53 @@ at_status_t AT_Class::sendCommand(const char *cmd, const char *param,
   return ESP_AT_SUB_OK;
 }
 
-
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * Waits for a prompt of the character '>' to arrive on the serial port.
+ *
+ * @param[in] - timeout The time allowed, in millisecond, for the prompt to arrive
+ *
+ * @return - The status of the operation, @see mqtt_status_e for more
+ *           information.
+ *
+ ******************************************************************************/
 at_status_t AT_Class::waitPrompt(uint32_t timeout) {
   char ch;
-  //_serial->setTimeout(timeout);
-  do {
-    if (_serial->available()) {
-      ch = _serial->read();
-    }
-  } while (ch != '>');
+  uint32_t to = millis();
+
+  while (!_serial->available() && ((millis() - to) < timeout));
+  if (!_serial->available())
+    return ESP_AT_SUB_CMD_TIMEOUT;
+
+  ch = _serial->read();
+  if (ch != '>')
+    return ESP_AT_SUB_CMD_ERROR;
 
   return ESP_AT_SUB_OK;
 }
 
-
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * Wait for a specific string to arrive on the serial port.
+ *
+ * @param[in] - str
+ *           Holds the string that we are looking for.
+ * @param[in] - timeout
+ *           The maximum time allowed to wait for the string to arrive.
+ *
+ * @return - The status of the operation, @see mqtt_status_e for more
+ *           information.
+ *
+ ******************************************************************************/
 at_status_t AT_Class::waitString(const char *str, uint32_t timeout) {
   size_t tx = 0;
+  uint32_t to = millis();
+
+  // First make sure there are characters in the buffer and that it did not
+  // take to long for them to arrive.
+  while (!_serial->available() && ((millis() - to) < timeout));
+  if (!_serial->available())
+    return ESP_AT_SUB_CMD_TIMEOUT;
 
   wx = 0;
   line = 0;
@@ -209,39 +298,90 @@ at_status_t AT_Class::waitString(const char *str, uint32_t timeout) {
     tx = wx;
     readLine();
     dprintf("L:\'%s\'\n", &buff[tx]);
-  } while (!strstr(&buff[tx], str));
+  } while (!strstr(&buff[tx], str) && ((millis() - to) < timeout));
+
+  if ((millis() - to) >= timeout)
+    return ESP_AT_SUB_CMD_TIMEOUT;
   return ESP_AT_SUB_OK;
 }
 
-
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * Send a generic string on the serial port. Can be used to send anything
+ * to the connected ESP-AT device.
+ *
+ * @param[in] - str (const char *)
+ *           The string/data that we want to send. Does not need to be '\0'
+ *           terminated.
+ * @param[in] - len
+ *           The length of the string/data that we want to send.
+ *
+ * @return - The status of the operation, @see mqtt_status_e for more
+ *           information.
+ *
+ ******************************************************************************/
 at_status_t AT_Class::sendString(const char *str, size_t len) {
   _serial->write(str, len);
   return ESP_AT_SUB_OK;
 }
 
-
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * Send a generic string on the serial port. Can be used to send anything
+ * to the connected ESP-AT device.
+ *
+ * @param[in] - str (char *)
+ *           The string/data that we want to send. Does not need to be '\0'
+ *           terminated.
+ * @param[in] - len
+ *           The length of the string/data that we want to send.
+ *
+ * @return - The status of the operation, @see mqtt_status_e for more
+ *           information.
+ *
+ ******************************************************************************/
 at_status_t AT_Class::sendString(char *str, size_t len) {
   _serial->write(str, len);
   return ESP_AT_SUB_OK;
 }
 
-
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * Send a generic string on the serial port. Can be used to send anything
+ * to the connected ESP-AT device.
+ *
+ * @param[in] - str (const char *)
+ *           The string/data that we want to send. Must be '\0' terminated.
+ *
+ * @return - The status of the operation, @see mqtt_status_e for more
+ *           information.
+ *
+ ******************************************************************************/
 at_status_t AT_Class::sendString(const char *str) {
   _serial->write(str, strlen(str));
   return ESP_AT_SUB_OK;
 }
 
-
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * Returns a pointer to the internal receive buffer. Can be used by the caller
+ * to directly access the recevied data string from the ESP-AT device.
+ *
+ * @return - A pointer to the internal data receive buffer.
+ *
+ ******************************************************************************/
 char *AT_Class::getBuff() {
   return buff;
 }
 
-
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * Reads a byte from the serial port. The function ensures that a valid byte
+ * has been received from the ESP-AT device before returning the data.
+ *
+ * @return - The data byte received from the ESP-AT device.
+ *
+ ******************************************************************************/
 char AT_Class::read() {
   char ch;
 
@@ -252,7 +392,13 @@ char AT_Class::read() {
   return ch;
 }
 
-//------------------------------------------------------------------------------
+/*******************************************************************************
+ *
+ * Checks to see if there are any data available on the serial port.
+ *
+ * @return - The number of bytes found available in the serial read buffer.
+ *
+ ******************************************************************************/
 int AT_Class::available() {
   return _serial->available();
 }
