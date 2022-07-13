@@ -14,9 +14,9 @@ EspATMQTT 		        KEYWORD1
 
 userConfig            KEYWORD2
 connect               KEYWORD2
-clientID              KEYWORD2
-username              KEYWORD2
-password              KEYWORD2
+setClientID           KEYWORD2
+setUsername           KEYWORD2
+setPassword           KEYWORD2
 connectionConfig      KEYWORD2
 setALPN               KEYWORD2
 pubString             KEYWORD2

@@ -165,6 +165,15 @@ enum mqtt_retain_e {
   AT_MQTT_RETAIN = 1
 };
 
+/**
+ * Parameter values that represent the keepalive states in function calls where
+ * the keepalive function is used.
+ */
+enum mqtt_keepalive_e {
+  AT_MQTT_DO_NOT_KEEPALIVE = 0,
+  AT_MQTT_KEEPALIVE = 1
+};
+
 /** @typedef mqtt_connectType_t
  * Used to define the different connection types of a MQTT connection.
  */
@@ -223,12 +232,12 @@ public:
   mqtt_status_t connect(uint32_t linkID, const char *host,
                            uint32_t port=1883, uint32_t reconnect=0,
                            uint32_t timeout = 5000, connected_cb_t cb = NULL);
-  mqtt_status_t clientID(uint32_t linkID, const char *clientID);
-  mqtt_status_t clientID(uint32_t linkID, char *clientID);
-  mqtt_status_t username(uint32_t linkID, const char *username);
-  mqtt_status_t username(uint32_t linkID, char *username);
-  mqtt_status_t password(uint32_t linkID, const char *password);
-  mqtt_status_t password(uint32_t linkID, char *password);
+  mqtt_status_t setClientID(uint32_t linkID, const char *clientID);
+  mqtt_status_t setClientID(uint32_t linkID, char *clientID);
+  mqtt_status_t setUsername(uint32_t linkID, const char *username);
+  mqtt_status_t setUsername(uint32_t linkID, char *username);
+  mqtt_status_t setPassword(uint32_t linkID, const char *password);
+  mqtt_status_t setPassword(uint32_t linkID, char *password);
   mqtt_status_t connectionConfig(uint32_t linkID, uint32_t keepalive,
                            uint32_t disable_clean_session, const char* lwt_topic,
                            const char* lwt_message, uint32_t lwt_qos = 0,

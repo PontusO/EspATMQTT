@@ -307,7 +307,7 @@ mqtt_status_t EspATMQTT::userConfig(uint32_t linkID, mqtt_scheme_t scheme,
  *      #status_code_e for more information.
  *
  ******************************************************************************/
-mqtt_status_t EspATMQTT::clientID(uint32_t linkID, const char *clientID) {
+mqtt_status_t EspATMQTT::setClientID(uint32_t linkID, const char *clientID) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, clientID);
   return at->sendCommand(MQTT_CMD_CLIENTID, buff, NULL);
@@ -334,7 +334,7 @@ mqtt_status_t EspATMQTT::clientID(uint32_t linkID, const char *clientID) {
  *      #status_code_e for more information.
  *
  ******************************************************************************/
-mqtt_status_t EspATMQTT::clientID(uint32_t linkID, char *clientID) {
+mqtt_status_t EspATMQTT::setClientID(uint32_t linkID, char *clientID) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, clientID);
   return at->sendCommand(MQTT_CMD_CLIENTID, buff, NULL);
@@ -362,7 +362,7 @@ mqtt_status_t EspATMQTT::clientID(uint32_t linkID, char *clientID) {
  *      #status_code_e for more information.
  *
  ******************************************************************************/
-mqtt_status_t EspATMQTT::username(uint32_t linkID, const char *username) {
+mqtt_status_t EspATMQTT::setUsername(uint32_t linkID, const char *username) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, username);
   return at->sendCommand(MQTT_CMD_USERNAME, buff, NULL);
@@ -390,7 +390,7 @@ mqtt_status_t EspATMQTT::username(uint32_t linkID, const char *username) {
  *      #status_code_e for more information.
  *
  ******************************************************************************/
-mqtt_status_t EspATMQTT::username(uint32_t linkID, char *username) {
+mqtt_status_t EspATMQTT::setUsername(uint32_t linkID, char *username) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, username);
   return at->sendCommand(MQTT_CMD_USERNAME, buff, NULL);
@@ -418,7 +418,7 @@ mqtt_status_t EspATMQTT::username(uint32_t linkID, char *username) {
  *      #status_code_e for more information.
  *
  ******************************************************************************/
-mqtt_status_t EspATMQTT::password(uint32_t linkID, const char *password) {
+mqtt_status_t EspATMQTT::setPassword(uint32_t linkID, const char *password) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, password);
   return at->sendCommand(MQTT_CMD_PASSWORD, buff, NULL);
@@ -446,7 +446,7 @@ mqtt_status_t EspATMQTT::password(uint32_t linkID, const char *password) {
  *      #status_code_e for more information.
  *
  ******************************************************************************/
-mqtt_status_t EspATMQTT::password(uint32_t linkID, char *password) {
+mqtt_status_t EspATMQTT::setPassword(uint32_t linkID, char *password) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, password);
   return at->sendCommand(MQTT_CMD_PASSWORD, buff, NULL);

@@ -90,5 +90,5 @@ var searchData=
   ['at_5fmqtt_5fversion_5fread_5ffailed_87',['AT_MQTT_VERSION_READ_FAILED',['../EspATMQTT_8h.html#a2796c57b81b8146732eecabb213554d0a770c8768db227458391175f44951225b',1,'EspATMQTT.h']]],
   ['at_5fstatus_5ft_88',['at_status_t',['../AT_8h.html#a0c488f966048be07ee0f11f6969c3524',1,'AT.h']]],
   ['available_89',['available',['../classAT__Class.html#acf3c1e982cd25c20cf11e2920e101b31',1,'AT_Class']]],
-  ['a_20simple_20wrapper_20library_20for_20the_20mqtt_20functionality_20in_20the_20esp_2dat_20stack_2e_90',['A simple wrapper library for the MQTT functionality in the esp-at stack.',['../index.html',1,'']]]
+  ['a_20simple_20wrapper_20library_20for_20the_20mqtt_20functionality_20in_20the_20esp_2dat_20stack_2e_90',['A simple wrapper library for the MQTT functionality in the ESP-AT stack.',['../index.html',1,'']]]
 ];
