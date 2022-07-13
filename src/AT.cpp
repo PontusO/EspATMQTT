@@ -58,7 +58,7 @@ AT_Class::AT_Class(HardwareSerial* serial) {
  * Each line that is read is appended to the internal buffer to create a
  * internal processable response. CR and LF's are removed and replaced with
  * a '|' character to separate the lines in the buffer. This can then later
- * be process using strok or a similar function.
+ * be process using strtok or a similar function.
  *
  * @return The number of characters read from the serial port.
  *
@@ -105,7 +105,7 @@ size_t AT_Class::readLine() {
  *          before a response is expected. If data has not arrived within the
  *          alloted time the function will return with a timeout error message.
  *
- * @return - The status of the operation, @see mqtt_status_e for more
+ * @return - The status of the operation, See #status_code_e for more
  *           information.
  *
  ******************************************************************************/
@@ -203,7 +203,7 @@ at_status_t AT_Class::waitReply(const char *asynch, uint32_t timeout) {
  *          for a reply from the ESP-AT device. This value is also used when
  *          waiting for an asynchronous response.
  *
- * @return - The status of the operation, @see mqtt_status_e for more
+ * @return - The status of the operation, See #status_code_e for more
  *           information.
  *
  ******************************************************************************/
@@ -250,7 +250,7 @@ at_status_t AT_Class::sendCommand(const char *cmd, const char *param,
  *
  * @param[in] - timeout The time allowed, in millisecond, for the prompt to arrive
  *
- * @return - The status of the operation, @see mqtt_status_e for more
+ * @return - The status of the operation, See #status_code_e for more
  *           information.
  *
  ******************************************************************************/
@@ -278,7 +278,7 @@ at_status_t AT_Class::waitPrompt(uint32_t timeout) {
  * @param[in] - timeout
  *           The maximum time allowed to wait for the string to arrive.
  *
- * @return - The status of the operation, @see mqtt_status_e for more
+ * @return - The status of the operation, See #status_code_e for more
  *           information.
  *
  ******************************************************************************/
@@ -316,7 +316,7 @@ at_status_t AT_Class::waitString(const char *str, uint32_t timeout) {
  * @param[in] - len
  *           The length of the string/data that we want to send.
  *
- * @return - The status of the operation, @see mqtt_status_e for more
+ * @return - The status of the operation, See #status_code_e for more
  *           information.
  *
  ******************************************************************************/
@@ -336,7 +336,7 @@ at_status_t AT_Class::sendString(const char *str, size_t len) {
  * @param[in] - len
  *           The length of the string/data that we want to send.
  *
- * @return - The status of the operation, @see mqtt_status_e for more
+ * @return - The status of the operation, See #status_code_e for more
  *           information.
  *
  ******************************************************************************/
@@ -353,7 +353,7 @@ at_status_t AT_Class::sendString(char *str, size_t len) {
  * @param[in] - str (const char *)
  *           The string/data that we want to send. Must be '\0' terminated.
  *
- * @return - The status of the operation, @see mqtt_status_e for more
+ * @return - The status of the operation, See #status_code_e for more
  *           information.
  *
  ******************************************************************************/

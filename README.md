@@ -1,6 +1,6 @@
 # A simple wrapper library for the MQTT functionality in the esp-at stack.
 
-This library was developed to support the MQTT stack found in the esp-at interpreter. It forms a simple wrapper around the AT commands in order to make it easier to use, instead of sending AT commands over the serial port you can now use a simple C++ class with a well defined API to do the same. All the handling of the serial port is taken care of for you.
+This library was developed to support the MQTT stack found in the ESP-AT interpreter. It forms a simple wrapper around the AT commands in order to make it easier to use, instead of sending AT commands over the serial port you can now use a simple C++ class with a well defined API to do the same. All the handling of the serial port is taken care of for you.
 
 ## The AT_Class
 
@@ -64,8 +64,32 @@ Here's a simple example on how to create and send a json formated response using
   mqtt.pubRaw(DEFAULT_LINK_ID, "messages/data", output);
 ```
 
-## License
+## Security
+
+MQTT relies on the TCP transport protocol. By default, TCP connections do not use an encrypted communication. To encrypt the whole MQTT communication, many MQTT brokers (such as HiveMQ and Mosquitto) allow use of TLS instead of plain TCP. If you use the username and password fields of the MQTT CONNECT packet for authentication and authorization mechanisms, you should strongly consider using TLS.
+
+Port 8883 is standardized for a secured MQTT connection. The standardized name at IANA is “secure-mqtt”. Port 8883 is exclusively reserved for MQTT over TLS.
+
+The ESP-AT MQTT client also supports the use of TLS to protect your data and this wrapper of course also supports this. A number of conenction methods and certificate validation schemes can be used (See #mqtt_scheme_e) with this implementation.
+
+Selecting a connection scheme is a simple oneliner:
 ```
+    mqtt.userConfig(DEFAULT_LINK_ID, ESP_MQTT_SCHEME_MQTT_OVER_TLS_VSCPCC, "Challenger_RP2040_WiFi_BLE");
+```
+
+Validation of certificates requires that the system can tell the data and time and the library implements methods for enabling an ESP-AT internal NTP client that automatically connects and get the current date and time.
+
+
+Enabling the NTP client is also extremely simple, simply enter:
+```
+    mqtt.enableNTPTime(true, ntp_time_received, 2, "us.pool.ntp.org");
+```
+When the client has acquired a valid date and time the ```ntp_time_received``` function will be called in which you can go ahead and connect to your secure MQTT server/broker.
+
+Certificate, key and CA can be uploaded to the device to support any IoT cloud vendor. We've tested the library and ESP-AT fw with Amazon AWS, Microsoft Azure and a bunch of local test servers using different security schemes.
+
+## License
+
   Copyright (c) 2022 iLabs - Pontus Oldberg
 
   Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -85,4 +109,3 @@ Here's a simple example on how to create and send a json formated response using
   LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
   OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
   SOFTWARE.
-```

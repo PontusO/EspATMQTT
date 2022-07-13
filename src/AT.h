@@ -39,7 +39,6 @@
 #define _H_AT_COM_
 
 /**
- * @var Return codes from the AT stack
  *
  * Status codes that the AT handler can return. These are basically the same
  * return (error) codes that the ESP-AT module returns when an error is
@@ -70,9 +69,9 @@ enum status_code_e {
 
 #define AT_ERROR(x)       (x & 0x00ff0000)
 
-/** @var
+/**
  * The return value of an AT operation. This value is represented by a member
- * of the enum status_code_e. The caller can use the AT_ERROR macro to check
+ * of the enum #status_code_e. The caller can use the AT_ERROR macro to check
  * for a specifik status code.
  */
 typedef uint32_t          at_status_t;
@@ -101,19 +100,17 @@ public:
   at_status_t sendString(const char *str, size_t len);
   at_status_t sendString(char *str, size_t len);
   at_status_t sendString(const char *str);
-  size_t readString();
   char read();
   int available();
 
   char *getBuff();
-  uint32_t getErrno();
 private:
   HardwareSerial* _serial;
-  char buff[1024];        // Serial read buffer
-  char cmdBuff[256];      // Command buffer for stuff sent to the ESP
-  char resBuff[128];      // Result buffer for parameter data returned from the ESP
-  int wx;
-  int line;
+  char buff[1024];    /**< Serial input buffer */
+  char cmdBuff[256];  /**< Command buffer for stuff sent to the ESP-AT device */
+  char resBuff[128];  /**< Result buffer for parameter data returned from the ESP-AT device */
+  int wx;             /**< Write pointer to the input buffer while processing an ESP-AT response */
+  int line;           /**< Keeps track of how many lines have been received during the processing of an ESP-AT reply */
 };
 
 #endif
