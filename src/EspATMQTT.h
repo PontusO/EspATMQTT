@@ -165,15 +165,6 @@ enum mqtt_retain_e {
   AT_MQTT_RETAIN = 1
 };
 
-/**
- * Parameter values that represent the keepalive states in function calls where
- * the keepalive function is used.
- */
-enum mqtt_keepalive_e {
-  AT_MQTT_DO_NOT_KEEPALIVE = 0,
-  AT_MQTT_KEEPALIVE = 1
-};
-
 /** @typedef mqtt_connectType_t
  * Used to define the different connection types of a MQTT connection.
  */
