@@ -104,6 +104,7 @@ public:
   int available();
 
   char *getBuff();
+  HardwareSerial* getSerial();
 private:
   HardwareSerial* _serial;
   char buff[1024];    /**< Serial input buffer */

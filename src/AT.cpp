@@ -402,3 +402,15 @@ char AT_Class::read() {
 int AT_Class::available() {
   return _serial->available();
 }
+
+/*******************************************************************************
+ *
+ * Returns the current instance of the serial port. Can be used by friendly
+ * classes.
+ *
+ * @return - The currently used hardware serialport
+ *
+ ******************************************************************************/
+HardwareSerial* AT_Class::getSerial() {
+  return _serial;
+}

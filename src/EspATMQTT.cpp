@@ -78,8 +78,8 @@ EspATMQTT::EspATMQTT(HardwareSerial* serial) {
  * The begin method initializes the system before usage. It must be called
  * before running any other methods of this library.
  *
-   * @return - The status of the operation, See #mqtt_error_e and
-   *      #status_code_e for more information.
+ * @return - The status of the operation, See #mqtt_error_e and
+ *      #status_code_e for more information.
  *
  ******************************************************************************/
 mqtt_status_t EspATMQTT::begin() {
