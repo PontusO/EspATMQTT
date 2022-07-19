@@ -90,6 +90,9 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a866cdfd06d35f16961ecf6341ac09025"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspATMQTT.html#a866cdfd06d35f16961ecf6341ac09025">EspATMQTT</a> (HardwareSerial *=&amp;ESP_SERIAL_PORT)</td></tr>
 <tr class="memdesc:a866cdfd06d35f16961ecf6341ac09025"><td class="mdescLeft">&#160;</td><td class="mdescRight">The module constructor allows you to select what serial port that should be used to communicate with the ESP-AT module.  <a href="classEspATMQTT.html#a866cdfd06d35f16961ecf6341ac09025">More...</a><br /></td></tr>
 <tr class="separator:a866cdfd06d35f16961ecf6341ac09025"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac28760143692e3085aad872e6e950602"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspATMQTT.html#ac28760143692e3085aad872e6e950602">EspATMQTT</a> (<a class="el" href="classAT__Class.html">AT_Class</a> *at)</td></tr>
+<tr class="memdesc:ac28760143692e3085aad872e6e950602"><td class="mdescLeft">&#160;</td><td class="mdescRight">The module constructor allows you to select an already constructed AT Class used to communicate with the ESP-AT module.  <a href="classEspATMQTT.html#ac28760143692e3085aad872e6e950602">More...</a><br /></td></tr>
+<tr class="separator:ac28760143692e3085aad872e6e950602"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a97a6b0b76519d2c66f88e63f0ab03191"><td class="memItemLeft" align="right" valign="top"><a class="el" href="EspATMQTT_8h.html#aa29c13469d99defe0c7279598192f7d8">mqtt_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classEspATMQTT.html#a97a6b0b76519d2c66f88e63f0ab03191">begin</a> ()</td></tr>
 <tr class="memdesc:a97a6b0b76519d2c66f88e63f0ab03191"><td class="mdescLeft">&#160;</td><td class="mdescRight">The begin method initializes the system before usage.  <a href="classEspATMQTT.html#a97a6b0b76519d2c66f88e63f0ab03191">More...</a><br /></td></tr>
 <tr class="separator:a97a6b0b76519d2c66f88e63f0ab03191"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -171,9 +174,9 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a49e6e289334c3ac178fef7aad668f8e3"><td class="memItemLeft" align="right" valign="top"><a id="a49e6e289334c3ac178fef7aad668f8e3"></a>
-<a class="el" href="classAT__Class.html">AT_Class</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>at</b></td></tr>
-<tr class="separator:a49e6e289334c3ac178fef7aad668f8e3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aee3fe5abb60080ba6219320ae1771aaa"><td class="memItemLeft" align="right" valign="top"><a id="aee3fe5abb60080ba6219320ae1771aaa"></a>
+<a class="el" href="classAT__Class.html">AT_Class</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>_at</b></td></tr>
+<tr class="separator:aee3fe5abb60080ba6219320ae1771aaa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6221ab934f1ceb609d4764ec761cfc86"><td class="memItemLeft" align="right" valign="top"><a id="a6221ab934f1ceb609d4764ec761cfc86"></a>
 <a class="el" href="EspATMQTT_8h.html#af7cb6dd5ee13867fe8cf3b40b0ef2ac7">subscription_cb_t</a>&#160;</td><td class="memItemRight" valign="bottom"><b>subscription_cb</b></td></tr>
 <tr class="separator:a6221ab934f1ceb609d4764ec761cfc86"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -203,7 +206,7 @@ char&#160;</td><td class="memItemRight" valign="bottom"><b>buff</b> [MQTT_BUFFER
 <div class="textblock"><p>EspAT MQTT <a class="el" href="classEspATMQTT.html" title="EspAT MQTT EspATMQTT class definition.">EspATMQTT</a> class definition. </p>
 </div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a866cdfd06d35f16961ecf6341ac09025"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a866cdfd06d35f16961ecf6341ac09025">&#9670;&nbsp;</a></span>EspATMQTT()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a866cdfd06d35f16961ecf6341ac09025">&#9670;&nbsp;</a></span>EspATMQTT() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -219,6 +222,32 @@ char&#160;</td><td class="memItemRight" valign="bottom"><b>buff</b> [MQTT_BUFFER
 </div><div class="memdoc">
 
 <p>The module constructor allows you to select what serial port that should be used to communicate with the ESP-AT module. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">-</td><td>serial The serial port that is connected to the ESP-AT module. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ac28760143692e3085aad872e6e950602"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac28760143692e3085aad872e6e950602">&#9670;&nbsp;</a></span>EspATMQTT() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">EspATMQTT::EspATMQTT </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classAT__Class.html">AT_Class</a> *&#160;</td>
+          <td class="paramname"><em>at</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>The module constructor allows you to select an already constructed AT Class used to communicate with the ESP-AT module. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">-</td><td>serial The serial port that is connected to the ESP-AT module. </td></tr>

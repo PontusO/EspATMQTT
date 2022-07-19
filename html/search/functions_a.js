@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['waitprompt_190',['waitPrompt',['../classAT__Class.html#a54f448639cbcd8bbcae4a18d0c6ba740',1,'AT_Class']]],
-  ['waitreply_191',['waitReply',['../classAT__Class.html#a408c1ed423d049988df1f0badbb89ebb',1,'AT_Class']]],
-  ['waitstring_192',['waitString',['../classAT__Class.html#a6f727c41336bcfe3f6e6648a23e707c3',1,'AT_Class']]]
+  ['unsubscribetopic_232',['unSubscribeTopic',['../classEspATMQTT.html#a41fad78c34bbd86176eef929be9c4685',1,'EspATMQTT::unSubscribeTopic(uint32_t linkID, const char *topic)'],['../classEspATMQTT.html#aabf1e9b9a591e154451130b35489ae95',1,'EspATMQTT::unSubscribeTopic(uint32_t linkID, char *topic)']]],
+  ['updatepkiitem_233',['updatePkiItem',['../classMqttCertMgmt.html#ac9a6f333726311fb84ee97e69bc54ec7',1,'MqttCertMgmt::updatePkiItem(uint32_t partition, const char *pkiBuffer, size_t length)'],['../classMqttCertMgmt.html#a56719b4c53b35c3812a240accb1288f6',1,'MqttCertMgmt::updatePkiItem(uint32_t partition, char *pkiBuffer, size_t length)']]],
+  ['userconfig_234',['userConfig',['../classEspATMQTT.html#aebd4ec0e4036b283d911e9b4c4de7e91',1,'EspATMQTT::userConfig(uint32_t linkID, mqtt_scheme_t scheme, const char *clientID, const char *userName=&quot;&quot;, const char *password=&quot;&quot;, uint32_t certKeyID=0, uint32_t caID=0, const char *path=&quot;&quot;)'],['../classEspATMQTT.html#aa16710ca14260976f0b1b7db39da34d1',1,'EspATMQTT::userConfig(uint32_t linkID, mqtt_scheme_t scheme, char *clientID, const char *userName=&quot;&quot;, const char *password=&quot;&quot;, uint32_t certKeyID=0, uint32_t caID=0, const char *path=&quot;&quot;)'],['../classEspATMQTT.html#ab6600503df7e04f882ff7571a3207446',1,'EspATMQTT::userConfig(uint32_t linkID, mqtt_scheme_t scheme, char *clientID, char *userName, char *password, uint32_t certKeyID=0, uint32_t caID=0, const char *path=&quot;&quot;)']]]
 ];

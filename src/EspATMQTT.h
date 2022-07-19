@@ -207,6 +207,7 @@ typedef uint32_t            mqtt_status_t;
 class EspATMQTT {
 public:
   EspATMQTT(HardwareSerial* = &ESP_SERIAL_PORT);
+  EspATMQTT(AT_Class* at);
 
   mqtt_status_t begin();
   mqtt_status_t userConfig(uint32_t linkID, mqtt_scheme_t scheme, const char *clientID,
@@ -260,7 +261,7 @@ public:
   bool isConnected();
   void process();
 private:
-  AT_Class *at;
+  AT_Class *_at;
   subscription_cb_t subscription_cb;
   validDateTime_cb_t validDateTime_cb;
   mqtt_connectType_t connType;

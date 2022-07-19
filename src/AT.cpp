@@ -39,6 +39,7 @@
 static const char *STR_OK         = "OK";
 static const char *STR_ERROR      = "ERROR";
 static const char *STR_ERR_CODE   = "ERR CODE:";
+static const char *STR_BUSY       = "busy p...";
 
 /*******************************************************************************
  *
@@ -63,9 +64,10 @@ AT_Class::AT_Class(HardwareSerial* serial) {
  * @return The number of characters read from the serial port.
  *
  ******************************************************************************/
-size_t AT_Class::readLine() {
+size_t AT_Class::readLine(uint32_t timeout) {
   size_t cnt = 0;
   char ch = 0;
+  uint32_t to = millis();
 
   do {
     ch = read();
@@ -73,7 +75,10 @@ size_t AT_Class::readLine() {
       buff[wx++] = ch;
       cnt++;
     }
-  } while (ch != '\n' && ch != -1);
+  } while (ch != '\n' && ch != -1 && (millis() - to < timeout));
+
+  if (millis() - to >= timeout)
+    return 0;
 
   buff[wx++] = '|';
   buff[wx] = '\0';
@@ -119,8 +124,17 @@ at_status_t AT_Class::waitReply(const char *asynch, uint32_t timeout) {
   line = 0;
   do {
     tx = wx;
-    readLine();
+    if (!readLine(timeout))
+      return ESP_AT_SUB_CMD_TIMEOUT;
+
+    if (strstr(&buff[tx], STR_BUSY)) {
+      // So the ESP-AT interpreter is still busy executing the previously
+      // send command. This means we need to wait and retry
+      errno = ESP_AT_SUB_CMD_RETRY;
+      err = true;
+    }
     if (strstr(&buff[tx], STR_ERR_CODE)) {
+      err = true;
       errno = strtol(&buff[tx+9], NULL, 16);
       dprintf("Error code %08x detected\n", errno);
     }
@@ -211,18 +225,26 @@ at_status_t AT_Class::sendCommand(const char *cmd, const char *param,
                                     char **result, const char *asynch,
                                     uint32_t timeout) {
   at_status_t res;
-
-  sprintf(cmdBuff, "AT%s%s", cmd, param);
-  _serial->println(cmdBuff);
-  dprintf("S:\'%s\'\n", cmdBuff);
-
   uint32_t to = millis();
-  while (!_serial->available() && (millis() - to < timeout))
-    yield();
-  if (!_serial->available())
-    return ESP_AT_SUB_CMD_TIMEOUT;
 
-  res = waitReply(asynch, timeout);
+  snprintf(cmdBuff, ESP_AT_CMDBUFF_LENGTH, "AT%s%s", cmd, param);
+  do {
+    dprintf("S:\'%s\'\n", cmdBuff);
+    _serial->println(cmdBuff);
+
+    while (!_serial->available() && (millis() - to < timeout))
+      yield();
+    if (!_serial->available())
+      return ESP_AT_SUB_CMD_TIMEOUT;
+
+    res = waitReply(asynch, timeout);
+    if (res == ESP_AT_SUB_CMD_RETRY) {
+      dprintf("Retrying last command !\n", NULL);
+      delay(250); // Make sure we have a nice little delay before retrying
+    }
+  } while (res == ESP_AT_SUB_CMD_RETRY && (millis() - to < timeout));
+  if ((millis() - to) >= timeout)
+    return ESP_AT_SUB_CMD_TIMEOUT;
   if (res != ESP_AT_SUB_OK)
     return res;
 
@@ -378,18 +400,29 @@ char *AT_Class::getBuff() {
  *
  * Reads a byte from the serial port. The function ensures that a valid byte
  * has been received from the ESP-AT device before returning the data.
+ * If a timeout situation occurs, it will return 0xff.
  *
  * @return - The data byte received from the ESP-AT device.
  *
  ******************************************************************************/
-char AT_Class::read() {
+char AT_Class::read(uint32_t timeout) {
   char ch;
+  uint32_t to = millis();
 
   do {
     ch = _serial->read();
-  } while (ch == 255);
+  } while (ch == 255 && (millis() - to < timeout));
 
   return ch;
+}
+
+/*******************************************************************************
+ *
+ * Writes a byte to the serial port.
+ *
+ ******************************************************************************/
+void AT_Class::write(char ch) {
+  _serial->write(ch);
 }
 
 /*******************************************************************************
@@ -401,6 +434,15 @@ char AT_Class::read() {
  ******************************************************************************/
 int AT_Class::available() {
   return _serial->available();
+}
+
+/*******************************************************************************
+ *
+ * Sets the serial port to be used in this class.
+ *
+ ******************************************************************************/
+void AT_Class::setSerial(HardwareSerial* port) {
+  _serial = port;
 }
 
 /*******************************************************************************

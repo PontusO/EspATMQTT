@@ -38,6 +38,7 @@
 #ifndef _H_AT_COM_
 #define _H_AT_COM_
 
+#define ESP_AT_CMDBUFF_LENGTH     256
 /**
  *
  * Status codes that the AT handler can return. These are basically the same
@@ -64,6 +65,8 @@ enum status_code_e {
   ESP_AT_SUB_CMD_CONN_SYNCH       = 0x010f0000, /**< MQTT connection was synchronous */
   ESP_AT_SUB_CMD_CONN_ASYNCH      = 0x01100000, /**< MQTT connection was asynchronous,
                                                      a callback will be issued when the connection is made */
+  ESP_AT_SUB_CMD_RETRY            = 0x01110000, /**< The ESP-AT device returned a busy reply */
+  ESP_AT_SUB_CMD_INVALID_PKI_PART = 0x01120000, /**< The system found an invalid PKI partition */
   ESP_AT_SUB_CMD_LAST_COMMAND
 };
 
@@ -90,25 +93,27 @@ typedef uint32_t          at_status_t;
 class AT_Class {
 public:
   AT_Class(HardwareSerial* = &ESP_SERIAL_PORT);
-
-  size_t readLine();
+  size_t readLine(uint32_t timeout = 2000);
   at_status_t waitReply(const char *asynch, uint32_t timeout);
   at_status_t sendCommand(const char *cmd, const char *param, char **result,
-                            const char *asynch = NULL, uint32_t timeout=2000);
-  at_status_t waitPrompt(uint32_t timeout);
+                            const char *asynch = NULL, uint32_t timeout=10000);
+  at_status_t waitPrompt(uint32_t timeout=2000);
   at_status_t waitString(const char *str, uint32_t timeout);
   at_status_t sendString(const char *str, size_t len);
   at_status_t sendString(char *str, size_t len);
   at_status_t sendString(const char *str);
-  char read();
+  char read(uint32_t timeout = 500);
+  void write(char ch);
   int available();
 
   char *getBuff();
+  void setSerial(HardwareSerial* = &ESP_SERIAL_PORT);
   HardwareSerial* getSerial();
 private:
   HardwareSerial* _serial;
+
   char buff[1024];    /**< Serial input buffer */
-  char cmdBuff[256];  /**< Command buffer for stuff sent to the ESP-AT device */
+  char cmdBuff[ESP_AT_CMDBUFF_LENGTH];  /**< Command buffer for stuff sent to the ESP-AT device */
   char resBuff[128];  /**< Result buffer for parameter data returned from the ESP-AT device */
   int wx;             /**< Write pointer to the input buffer while processing an ESP-AT response */
   int line;           /**< Keeps track of how many lines have been received during the processing of an ESP-AT reply */

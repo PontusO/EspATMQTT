@@ -92,8 +92,10 @@ This graph shows which files directly or indirectly include this file:</div>
 <div class="dyncontent">
 <div class="center"><img src="AT_8h__dep__incl.png" border="0" usemap="#src_2AT_8hdep" alt=""/></div>
 <map name="src_2AT_8hdep" id="src_2AT_8hdep">
-<area shape="rect" title=" " alt="" coords="36,5,108,32"/>
+<area shape="rect" title=" " alt="" coords="140,5,212,32"/>
 <area shape="rect" href="EspATMQTT_8h.html" title=" " alt="" coords="5,80,139,107"/>
+<area shape="rect" href="MqttCertMgmt_8cpp.html" title=" " alt="" coords="149,155,315,181"/>
+<area shape="rect" href="MqttCertMgmt_8h.html" title=" " alt="" coords="213,80,365,107"/>
 </map>
 </div>
 </div>
@@ -107,6 +109,9 @@ Classes</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="define-members"></a>
 Macros</h2></td></tr>
+<tr class="memitem:a04c45fefa1bb03560abd3ffe8753f102"><td class="memItemLeft" align="right" valign="top"><a id="a04c45fefa1bb03560abd3ffe8753f102"></a>
+#define&#160;</td><td class="memItemRight" valign="bottom"><b>ESP_AT_CMDBUFF_LENGTH</b>&#160;&#160;&#160;256</td></tr>
+<tr class="separator:a04c45fefa1bb03560abd3ffe8753f102"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a3b74832b85bcb7fd060d88c1e5fdd9d4"><td class="memItemLeft" align="right" valign="top"><a id="a3b74832b85bcb7fd060d88c1e5fdd9d4"></a>
 #define&#160;</td><td class="memItemRight" valign="bottom"><b>AT_ERROR</b>(x)&#160;&#160;&#160;(x &amp; 0x00ff0000)</td></tr>
 <tr class="separator:a3b74832b85bcb7fd060d88c1e5fdd9d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -141,6 +146,8 @@ Enumerations</h2></td></tr>
 <a class="el" href="AT_8h.html#a796b7f69ede31ae39a12a24208c20701a5256452d9f75d0e7cea6ee0165dde42c">ESP_AT_SUB_CMD_CONN_SYNCH</a> = 0x010f0000, 
 <br />
 &#160;&#160;<a class="el" href="AT_8h.html#a796b7f69ede31ae39a12a24208c20701a3a4aba89e732f3573f346bb05fee636b">ESP_AT_SUB_CMD_CONN_ASYNCH</a> = 0x01100000, 
+<a class="el" href="AT_8h.html#a796b7f69ede31ae39a12a24208c20701a8cf3010cdd833621c5ab94fe96c01734">ESP_AT_SUB_CMD_RETRY</a> = 0x01110000, 
+<a class="el" href="AT_8h.html#a796b7f69ede31ae39a12a24208c20701a05aa1b7438f6689a05de111fe531a6db">ESP_AT_SUB_CMD_INVALID_PKI_PART</a> = 0x01120000, 
 <b>ESP_AT_SUB_CMD_LAST_COMMAND</b>
 <br />
  }</td></tr>
@@ -214,6 +221,10 @@ Enumerations</h2></td></tr>
 <tr><td class="fieldname"><a id="a796b7f69ede31ae39a12a24208c20701a5256452d9f75d0e7cea6ee0165dde42c"></a>ESP_AT_SUB_CMD_CONN_SYNCH&#160;</td><td class="fielddoc"><p>MQTT connection was synchronous. </p>
 </td></tr>
 <tr><td class="fieldname"><a id="a796b7f69ede31ae39a12a24208c20701a3a4aba89e732f3573f346bb05fee636b"></a>ESP_AT_SUB_CMD_CONN_ASYNCH&#160;</td><td class="fielddoc"><p>MQTT connection was asynchronous, a callback will be issued when the connection is made. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a796b7f69ede31ae39a12a24208c20701a8cf3010cdd833621c5ab94fe96c01734"></a>ESP_AT_SUB_CMD_RETRY&#160;</td><td class="fielddoc"><p>The ESP-AT device returned a busy reply. </p>
+</td></tr>
+<tr><td class="fieldname"><a id="a796b7f69ede31ae39a12a24208c20701a05aa1b7438f6689a05de111fe531a6db"></a>ESP_AT_SUB_CMD_INVALID_PKI_PART&#160;</td><td class="fielddoc"><p>The system found an invalid PKI partition. </p>
 </td></tr>
 </table>
 

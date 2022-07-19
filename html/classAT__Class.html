@@ -81,18 +81,18 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:adc0b586b4dc8843104625b18382cfd32"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#adc0b586b4dc8843104625b18382cfd32">AT_Class</a> (HardwareSerial *=&amp;ESP_SERIAL_PORT)</td></tr>
 <tr class="memdesc:adc0b586b4dc8843104625b18382cfd32"><td class="mdescLeft">&#160;</td><td class="mdescRight">The class constructor is used to set the serial port to be used to communicate with the ESP-AT device.  <a href="classAT__Class.html#adc0b586b4dc8843104625b18382cfd32">More...</a><br /></td></tr>
 <tr class="separator:adc0b586b4dc8843104625b18382cfd32"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a389087939b169b92aad704b89cfcaa69"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a389087939b169b92aad704b89cfcaa69">readLine</a> ()</td></tr>
-<tr class="memdesc:a389087939b169b92aad704b89cfcaa69"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read exactly one line from the serial port.  <a href="classAT__Class.html#a389087939b169b92aad704b89cfcaa69">More...</a><br /></td></tr>
-<tr class="separator:a389087939b169b92aad704b89cfcaa69"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a424327901621eb4457f62f32cea3d15c"><td class="memItemLeft" align="right" valign="top">size_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a424327901621eb4457f62f32cea3d15c">readLine</a> (uint32_t timeout=2000)</td></tr>
+<tr class="memdesc:a424327901621eb4457f62f32cea3d15c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read exactly one line from the serial port.  <a href="classAT__Class.html#a424327901621eb4457f62f32cea3d15c">More...</a><br /></td></tr>
+<tr class="separator:a424327901621eb4457f62f32cea3d15c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a408c1ed423d049988df1f0badbb89ebb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AT_8h.html#a0c488f966048be07ee0f11f6969c3524">at_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a408c1ed423d049988df1f0badbb89ebb">waitReply</a> (const char *asynch, uint32_t timeout)</td></tr>
 <tr class="memdesc:a408c1ed423d049988df1f0badbb89ebb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read all lines until the end of the AT command sequence All lines are stored in buff[] separated with a | character so you can use strtok later on.  <a href="classAT__Class.html#a408c1ed423d049988df1f0badbb89ebb">More...</a><br /></td></tr>
 <tr class="separator:a408c1ed423d049988df1f0badbb89ebb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a865aafe93ba8a75f82d084ea3885dc51"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AT_8h.html#a0c488f966048be07ee0f11f6969c3524">at_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a865aafe93ba8a75f82d084ea3885dc51">sendCommand</a> (const char *cmd, const char *param, char **result, const char *asynch=NULL, uint32_t timeout=2000)</td></tr>
-<tr class="memdesc:a865aafe93ba8a75f82d084ea3885dc51"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function sends the specified AT command and parameters to the ESP-AT device on the serial line.  <a href="classAT__Class.html#a865aafe93ba8a75f82d084ea3885dc51">More...</a><br /></td></tr>
-<tr class="separator:a865aafe93ba8a75f82d084ea3885dc51"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a54f448639cbcd8bbcae4a18d0c6ba740"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AT_8h.html#a0c488f966048be07ee0f11f6969c3524">at_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a54f448639cbcd8bbcae4a18d0c6ba740">waitPrompt</a> (uint32_t timeout)</td></tr>
-<tr class="memdesc:a54f448639cbcd8bbcae4a18d0c6ba740"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for a prompt of the character '&gt;' to arrive on the serial port.  <a href="classAT__Class.html#a54f448639cbcd8bbcae4a18d0c6ba740">More...</a><br /></td></tr>
-<tr class="separator:a54f448639cbcd8bbcae4a18d0c6ba740"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a706759882d3483d8ed1364108fb04f1e"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AT_8h.html#a0c488f966048be07ee0f11f6969c3524">at_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a706759882d3483d8ed1364108fb04f1e">sendCommand</a> (const char *cmd, const char *param, char **result, const char *asynch=NULL, uint32_t timeout=10000)</td></tr>
+<tr class="memdesc:a706759882d3483d8ed1364108fb04f1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">This function sends the specified AT command and parameters to the ESP-AT device on the serial line.  <a href="classAT__Class.html#a706759882d3483d8ed1364108fb04f1e">More...</a><br /></td></tr>
+<tr class="separator:a706759882d3483d8ed1364108fb04f1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42b18a70ef0fff0f25c31fa74ba88ed2"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AT_8h.html#a0c488f966048be07ee0f11f6969c3524">at_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a42b18a70ef0fff0f25c31fa74ba88ed2">waitPrompt</a> (uint32_t timeout=2000)</td></tr>
+<tr class="memdesc:a42b18a70ef0fff0f25c31fa74ba88ed2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Waits for a prompt of the character '&gt;' to arrive on the serial port.  <a href="classAT__Class.html#a42b18a70ef0fff0f25c31fa74ba88ed2">More...</a><br /></td></tr>
+<tr class="separator:a42b18a70ef0fff0f25c31fa74ba88ed2"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f727c41336bcfe3f6e6648a23e707c3"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AT_8h.html#a0c488f966048be07ee0f11f6969c3524">at_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a6f727c41336bcfe3f6e6648a23e707c3">waitString</a> (const char *str, uint32_t timeout)</td></tr>
 <tr class="memdesc:a6f727c41336bcfe3f6e6648a23e707c3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Wait for a specific string to arrive on the serial port.  <a href="classAT__Class.html#a6f727c41336bcfe3f6e6648a23e707c3">More...</a><br /></td></tr>
 <tr class="separator:a6f727c41336bcfe3f6e6648a23e707c3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -105,15 +105,26 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad73cf86818fc899e76c2aa6883174c2b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="AT_8h.html#a0c488f966048be07ee0f11f6969c3524">at_status_t</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#ad73cf86818fc899e76c2aa6883174c2b">sendString</a> (const char *str)</td></tr>
 <tr class="memdesc:ad73cf86818fc899e76c2aa6883174c2b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a generic string on the serial port.  <a href="classAT__Class.html#ad73cf86818fc899e76c2aa6883174c2b">More...</a><br /></td></tr>
 <tr class="separator:ad73cf86818fc899e76c2aa6883174c2b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab5e6819d3dc047498198c681eb02d90d"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#ab5e6819d3dc047498198c681eb02d90d">read</a> ()</td></tr>
-<tr class="memdesc:ab5e6819d3dc047498198c681eb02d90d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a byte from the serial port.  <a href="classAT__Class.html#ab5e6819d3dc047498198c681eb02d90d">More...</a><br /></td></tr>
-<tr class="separator:ab5e6819d3dc047498198c681eb02d90d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8dce58f45751e4b9f383f1b0c43fa770"><td class="memItemLeft" align="right" valign="top">char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a8dce58f45751e4b9f383f1b0c43fa770">read</a> (uint32_t timeout=500)</td></tr>
+<tr class="memdesc:a8dce58f45751e4b9f383f1b0c43fa770"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reads a byte from the serial port.  <a href="classAT__Class.html#a8dce58f45751e4b9f383f1b0c43fa770">More...</a><br /></td></tr>
+<tr class="separator:a8dce58f45751e4b9f383f1b0c43fa770"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9f0f17c0fd0abbb8b895085b021cf2e4"><td class="memItemLeft" align="right" valign="top"><a id="a9f0f17c0fd0abbb8b895085b021cf2e4"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a9f0f17c0fd0abbb8b895085b021cf2e4">write</a> (char ch)</td></tr>
+<tr class="memdesc:a9f0f17c0fd0abbb8b895085b021cf2e4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Writes a byte to the serial port. <br /></td></tr>
+<tr class="separator:a9f0f17c0fd0abbb8b895085b021cf2e4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acf3c1e982cd25c20cf11e2920e101b31"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#acf3c1e982cd25c20cf11e2920e101b31">available</a> ()</td></tr>
 <tr class="memdesc:acf3c1e982cd25c20cf11e2920e101b31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Checks to see if there are any data available on the serial port.  <a href="classAT__Class.html#acf3c1e982cd25c20cf11e2920e101b31">More...</a><br /></td></tr>
 <tr class="separator:acf3c1e982cd25c20cf11e2920e101b31"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aae45145ffe1c153d10b3feeba141f496"><td class="memItemLeft" align="right" valign="top">char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#aae45145ffe1c153d10b3feeba141f496">getBuff</a> ()</td></tr>
 <tr class="memdesc:aae45145ffe1c153d10b3feeba141f496"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns a pointer to the internal receive buffer.  <a href="classAT__Class.html#aae45145ffe1c153d10b3feeba141f496">More...</a><br /></td></tr>
 <tr class="separator:aae45145ffe1c153d10b3feeba141f496"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9e4178dacbd103f2f83787c8607eaa6a"><td class="memItemLeft" align="right" valign="top"><a id="a9e4178dacbd103f2f83787c8607eaa6a"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a9e4178dacbd103f2f83787c8607eaa6a">setSerial</a> (HardwareSerial *=&amp;ESP_SERIAL_PORT)</td></tr>
+<tr class="memdesc:a9e4178dacbd103f2f83787c8607eaa6a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the serial port to be used in this class. <br /></td></tr>
+<tr class="separator:a9e4178dacbd103f2f83787c8607eaa6a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a760280e23099de5a6d044bbe8a90d984"><td class="memItemLeft" align="right" valign="top">HardwareSerial *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a760280e23099de5a6d044bbe8a90d984">getSerial</a> ()</td></tr>
+<tr class="memdesc:a760280e23099de5a6d044bbe8a90d984"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current instance of the serial port.  <a href="classAT__Class.html#a760280e23099de5a6d044bbe8a90d984">More...</a><br /></td></tr>
+<tr class="separator:a760280e23099de5a6d044bbe8a90d984"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -124,10 +135,10 @@ HardwareSerial *&#160;</td><td class="memItemRight" valign="bottom"><b>_serial</
 char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#ac5aeb70c1e9254c9928328d239a58825">buff</a> [1024]</td></tr>
 <tr class="memdesc:ac5aeb70c1e9254c9928328d239a58825"><td class="mdescLeft">&#160;</td><td class="mdescRight">Serial input buffer. <br /></td></tr>
 <tr class="separator:ac5aeb70c1e9254c9928328d239a58825"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a55115f87056e336f9aa640b986b651c2"><td class="memItemLeft" align="right" valign="top"><a id="a55115f87056e336f9aa640b986b651c2"></a>
-char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a55115f87056e336f9aa640b986b651c2">cmdBuff</a> [256]</td></tr>
-<tr class="memdesc:a55115f87056e336f9aa640b986b651c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command buffer for stuff sent to the ESP-AT device. <br /></td></tr>
-<tr class="separator:a55115f87056e336f9aa640b986b651c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa205736f92eb20baf6242e9690a9d3ef"><td class="memItemLeft" align="right" valign="top"><a id="aa205736f92eb20baf6242e9690a9d3ef"></a>
+char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#aa205736f92eb20baf6242e9690a9d3ef">cmdBuff</a> [ESP_AT_CMDBUFF_LENGTH]</td></tr>
+<tr class="memdesc:aa205736f92eb20baf6242e9690a9d3ef"><td class="mdescLeft">&#160;</td><td class="mdescRight">Command buffer for stuff sent to the ESP-AT device. <br /></td></tr>
+<tr class="separator:aa205736f92eb20baf6242e9690a9d3ef"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a0c1ad8f178ca5018ce94a7b4bdb1a02b"><td class="memItemLeft" align="right" valign="top"><a id="a0c1ad8f178ca5018ce94a7b4bdb1a02b"></a>
 char&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classAT__Class.html#a0c1ad8f178ca5018ce94a7b4bdb1a02b">resBuff</a> [128]</td></tr>
 <tr class="memdesc:a0c1ad8f178ca5018ce94a7b4bdb1a02b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Result buffer for parameter data returned from the ESP-AT device. <br /></td></tr>
@@ -214,14 +225,14 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 
 </div>
 </div>
-<a id="ab5e6819d3dc047498198c681eb02d90d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab5e6819d3dc047498198c681eb02d90d">&#9670;&nbsp;</a></span>read()</h2>
+<a id="a760280e23099de5a6d044bbe8a90d984"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a760280e23099de5a6d044bbe8a90d984">&#9670;&nbsp;</a></span>getSerial()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">char AT_Class::read </td>
+          <td class="memname">HardwareSerial * AT_Class::getSerial </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -229,14 +240,36 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
       </table>
 </div><div class="memdoc">
 
+<p>Returns the current instance of the serial port. </p>
+<p>Can be used by friendly classes.</p>
+<dl class="section return"><dt>Returns</dt><dd>- The currently used hardware serialport </dd></dl>
+
+</div>
+</div>
+<a id="a8dce58f45751e4b9f383f1b0c43fa770"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8dce58f45751e4b9f383f1b0c43fa770">&#9670;&nbsp;</a></span>read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">char AT_Class::read </td>
+          <td>(</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code>500</code></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
 <p>Reads a byte from the serial port. </p>
-<p>The function ensures that a valid byte has been received from the ESP-AT device before returning the data.</p>
+<p>The function ensures that a valid byte has been received from the ESP-AT device before returning the data. If a timeout situation occurs, it will return 0xff.</p>
 <dl class="section return"><dt>Returns</dt><dd>- The data byte received from the ESP-AT device. </dd></dl>
 
 </div>
 </div>
-<a id="a389087939b169b92aad704b89cfcaa69"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a389087939b169b92aad704b89cfcaa69">&#9670;&nbsp;</a></span>readLine()</h2>
+<a id="a424327901621eb4457f62f32cea3d15c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a424327901621eb4457f62f32cea3d15c">&#9670;&nbsp;</a></span>readLine()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -244,7 +277,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
         <tr>
           <td class="memname">size_t AT_Class::readLine </td>
           <td>(</td>
-          <td class="paramname"></td><td>)</td>
+          <td class="paramtype">uint32_t&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code>2000</code></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -256,8 +290,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 
 </div>
 </div>
-<a id="a865aafe93ba8a75f82d084ea3885dc51"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a865aafe93ba8a75f82d084ea3885dc51">&#9670;&nbsp;</a></span>sendCommand()</h2>
+<a id="a706759882d3483d8ed1364108fb04f1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a706759882d3483d8ed1364108fb04f1e">&#9670;&nbsp;</a></span>sendCommand()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -290,7 +324,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>timeout</em> = <code>2000</code>&#160;</td>
+          <td class="paramname"><em>timeout</em> = <code>10000</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -423,8 +457,8 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
 
 </div>
 </div>
-<a id="a54f448639cbcd8bbcae4a18d0c6ba740"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a54f448639cbcd8bbcae4a18d0c6ba740">&#9670;&nbsp;</a></span>waitPrompt()</h2>
+<a id="a42b18a70ef0fff0f25c31fa74ba88ed2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42b18a70ef0fff0f25c31fa74ba88ed2">&#9670;&nbsp;</a></span>waitPrompt()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -433,7 +467,7 @@ int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="class
           <td class="memname"><a class="el" href="AT_8h.html#a0c488f966048be07ee0f11f6969c3524">at_status_t</a> AT_Class::waitPrompt </td>
           <td>(</td>
           <td class="paramtype">uint32_t&#160;</td>
-          <td class="paramname"><em>timeout</em></td><td>)</td>
+          <td class="paramname"><em>timeout</em> = <code>2000</code></td><td>)</td>
           <td></td>
         </tr>
       </table>

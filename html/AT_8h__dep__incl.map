@@ -1,4 +1,6 @@
 <map id="src/AT.h" name="src/AT.h">
-<area shape="rect" id="node1" title=" " alt="" coords="36,5,108,32"/>
+<area shape="rect" id="node1" title=" " alt="" coords="140,5,212,32"/>
 <area shape="rect" id="node2" href="$EspATMQTT_8h.html" title=" " alt="" coords="5,80,139,107"/>
+<area shape="rect" id="node3" href="$MqttCertMgmt_8cpp.html" title=" " alt="" coords="149,155,315,181"/>
+<area shape="rect" id="node4" href="$MqttCertMgmt_8h.html" title=" " alt="" coords="213,80,365,107"/>
 </map>

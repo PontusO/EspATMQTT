@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['cmdbuff_194',['cmdBuff',['../classAT__Class.html#a55115f87056e336f9aa640b986b651c2',1,'AT_Class']]]
+  ['cmdbuff_242',['cmdBuff',['../classAT__Class.html#aa205736f92eb20baf6242e9690a9d3ef',1,'AT_Class']]]
 ];

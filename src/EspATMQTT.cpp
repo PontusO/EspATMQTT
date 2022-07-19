@@ -70,7 +70,19 @@ const char *AT_RESP_CIPSNTPTIME         = "+CIPSNTPTIME:";
  *
  ******************************************************************************/
 EspATMQTT::EspATMQTT(HardwareSerial* serial) {
-  at = new AT_Class(serial);
+  _at = new AT_Class(serial);
+}
+
+/*******************************************************************************
+ *
+ * The module constructor allows you to select an already constructed AT Class
+ * used to communicate with the ESP-AT module.
+ *
+ * @param - serial The serial port that is connected to the ESP-AT module.
+ *
+ ******************************************************************************/
+EspATMQTT::EspATMQTT(AT_Class* at) {
+  _at = at;
 }
 
 /*******************************************************************************
@@ -92,7 +104,7 @@ mqtt_status_t EspATMQTT::begin() {
   connType = AT_CONN_UNCONNECTED;
   // First we need to make sure that SYSLOG has been enabled to get all the
   // error codes.
-  while (at->sendCommand(AT_CMD_SYSLOG, "?", &strResult) != ESP_AT_SUB_OK)
+  while (_at->sendCommand(AT_CMD_SYSLOG, "?", &strResult) != ESP_AT_SUB_OK)
     delay(100);
 
   // Check
@@ -101,11 +113,11 @@ mqtt_status_t EspATMQTT::begin() {
   dprintf("Syslog int = %d\n", result);
   if (!result) {
     // And set if not already set
-    at->sendCommand(AT_CMD_SYSLOG, "=1", NULL);
+    _at->sendCommand(AT_CMD_SYSLOG, "=1", NULL);
   }
 
   // Make sure it got set
-  at->sendCommand(AT_CMD_SYSLOG, "?", &strResult);
+  _at->sendCommand(AT_CMD_SYSLOG, "?", &strResult);
   dprintf("Syslog String = %s\n", strResult);
   result = strtol(strResult, NULL, 10);
   dprintf("Syslog int = %d\n", result);
@@ -170,7 +182,7 @@ mqtt_status_t EspATMQTT::userConfig(uint32_t linkID, mqtt_scheme_t scheme,
  snprintf(buff, MQTT_BUFFER_SIZE, "=%d,%d,\"%s\",\"%s\",\"%s\",%d,%d,\"%s\"", linkID,
          (uint32_t)scheme, clientID, userName, password, certKeyID, caID, path);
 
- return at->sendCommand(MQTT_CMD_USERCFG, buff, NULL);
+ return _at->sendCommand(MQTT_CMD_USERCFG, buff, NULL);
 }
 
 /*******************************************************************************
@@ -227,7 +239,7 @@ mqtt_status_t EspATMQTT::userConfig(uint32_t linkID, mqtt_scheme_t scheme,
  snprintf(buff, MQTT_BUFFER_SIZE, "=%d,%d,\"%s\",\"%s\",\"%s\",%d,%d,\"%s\"", linkID,
          (uint32_t)scheme, clientID, userName, password, certKeyID, caID, path);
 
- return at->sendCommand(MQTT_CMD_USERCFG, buff, NULL);
+ return _at->sendCommand(MQTT_CMD_USERCFG, buff, NULL);
 }
 
 /*******************************************************************************
@@ -283,7 +295,7 @@ mqtt_status_t EspATMQTT::userConfig(uint32_t linkID, mqtt_scheme_t scheme,
  snprintf(buff, MQTT_BUFFER_SIZE, "=%d,%d,\"%s\",\"%s\",\"%s\",%d,%d,\"%s\"", linkID,
          (uint32_t)scheme, clientID, userName, password, certKeyID, caID, path);
 
- return at->sendCommand(MQTT_CMD_USERCFG, buff, NULL);
+ return _at->sendCommand(MQTT_CMD_USERCFG, buff, NULL);
 }
 
 /*******************************************************************************
@@ -310,7 +322,7 @@ mqtt_status_t EspATMQTT::userConfig(uint32_t linkID, mqtt_scheme_t scheme,
 mqtt_status_t EspATMQTT::setClientID(uint32_t linkID, const char *clientID) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, clientID);
-  return at->sendCommand(MQTT_CMD_CLIENTID, buff, NULL);
+  return _at->sendCommand(MQTT_CMD_CLIENTID, buff, NULL);
 }
 
 /*******************************************************************************
@@ -337,7 +349,7 @@ mqtt_status_t EspATMQTT::setClientID(uint32_t linkID, const char *clientID) {
 mqtt_status_t EspATMQTT::setClientID(uint32_t linkID, char *clientID) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, clientID);
-  return at->sendCommand(MQTT_CMD_CLIENTID, buff, NULL);
+  return _at->sendCommand(MQTT_CMD_CLIENTID, buff, NULL);
 }
 
 /*******************************************************************************
@@ -365,7 +377,7 @@ mqtt_status_t EspATMQTT::setClientID(uint32_t linkID, char *clientID) {
 mqtt_status_t EspATMQTT::setUsername(uint32_t linkID, const char *username) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, username);
-  return at->sendCommand(MQTT_CMD_USERNAME, buff, NULL);
+  return _at->sendCommand(MQTT_CMD_USERNAME, buff, NULL);
 }
 
 /*******************************************************************************
@@ -393,7 +405,7 @@ mqtt_status_t EspATMQTT::setUsername(uint32_t linkID, const char *username) {
 mqtt_status_t EspATMQTT::setUsername(uint32_t linkID, char *username) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, username);
-  return at->sendCommand(MQTT_CMD_USERNAME, buff, NULL);
+  return _at->sendCommand(MQTT_CMD_USERNAME, buff, NULL);
 }
 
 /*******************************************************************************
@@ -421,7 +433,7 @@ mqtt_status_t EspATMQTT::setUsername(uint32_t linkID, char *username) {
 mqtt_status_t EspATMQTT::setPassword(uint32_t linkID, const char *password) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, password);
-  return at->sendCommand(MQTT_CMD_PASSWORD, buff, NULL);
+  return _at->sendCommand(MQTT_CMD_PASSWORD, buff, NULL);
 }
 
 /*******************************************************************************
@@ -449,7 +461,7 @@ mqtt_status_t EspATMQTT::setPassword(uint32_t linkID, const char *password) {
 mqtt_status_t EspATMQTT::setPassword(uint32_t linkID, char *password) {
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\"", linkID, password);
-  return at->sendCommand(MQTT_CMD_PASSWORD, buff, NULL);
+  return _at->sendCommand(MQTT_CMD_PASSWORD, buff, NULL);
 }
 
 /*******************************************************************************
@@ -513,7 +525,7 @@ mqtt_status_t EspATMQTT::connectionConfig(uint32_t linkID, uint32_t keepalive,
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,%d,%d,\"%s\",\"%s\",%d,%d", linkID,
            keepalive, disable_clean_session, lwt_topic, lwt_message, lwt_qos, lwt_retain);
-  return at->sendCommand(MQTT_CMD_CONNCFG, buff, NULL);
+  return _at->sendCommand(MQTT_CMD_CONNCFG, buff, NULL);
 }
 
 /*******************************************************************************
@@ -570,7 +582,7 @@ mqtt_status_t EspATMQTT::setALPN(uint32_t linkID, const char *alpn1,
                      linkID, alpn1, alpn2, alpn3, alpn4, alpn5);
       break;
   }
-  return at->sendCommand(MQTT_CMD_ALPN, buff, NULL);
+  return _at->sendCommand(MQTT_CMD_ALPN, buff, NULL);
 }
 
 /*******************************************************************************
@@ -641,7 +653,7 @@ mqtt_status_t EspATMQTT::connect(uint32_t linkID, const char *host,
   char *result;
 
   snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\",%d,%d", linkID, host, port, reconnect);
-  ret = at->sendCommand(MQTT_CMD_CONN, buff, &result, MQTT_RESP_CONNECTED, timeout);
+  ret = _at->sendCommand(MQTT_CMD_CONN, buff, &result, MQTT_RESP_CONNECTED, timeout);
   if (ret == ESP_AT_SUB_OK) {
     dprintf("Connection result: %s\n", result);
     if (strstr(result, MQTT_RESP_CONNECTED)) {
@@ -706,7 +718,7 @@ mqtt_status_t EspATMQTT::pubString(uint32_t linkID, const char *topic,
                          const char *data, uint32_t qos, uint32_t retain) {
   if (connected) {
     snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\",\"%s\",%d,%d", linkID, topic, data, qos, retain);
-    return at->sendCommand(MQTT_CMD_PUB, buff, NULL);
+    return _at->sendCommand(MQTT_CMD_PUB, buff, NULL);
   }
   return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_IN_DISCONNECTED_STATE;
 }
@@ -758,7 +770,7 @@ mqtt_status_t EspATMQTT::pubString(uint32_t linkID, const char *topic, char *dat
                          uint32_t qos, uint32_t retain) {
   if (connected) {
     snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\",\"%s\",%d,%d", linkID, topic, data, qos, retain);
-    return at->sendCommand(MQTT_CMD_PUB, buff, NULL);
+    return _at->sendCommand(MQTT_CMD_PUB, buff, NULL);
   }
   return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_IN_DISCONNECTED_STATE;
 }
@@ -815,15 +827,15 @@ mqtt_status_t EspATMQTT::pubRaw(uint32_t linkID, const char *topic, const char *
     size_t len = strlen(data);
 
     snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\",%d,%d,%d", linkID, topic, len, qos, retain);
-    status = at->sendCommand(MQTT_CMD_PUBRAW, buff, NULL);
+    status = _at->sendCommand(MQTT_CMD_PUBRAW, buff, NULL);
     if (status != ESP_AT_SUB_OK) {
       return status;
     }
-    at->waitPrompt(100);
-    at->sendString(data, len);
-    at->waitString(MQTT_STRING_MQTTPUB, 100);
+    _at->waitPrompt(100);
+    _at->sendString(data, len);
+    _at->waitString(MQTT_STRING_MQTTPUB, 100);
 
-    char *lBuff = at->getBuff();
+    char *lBuff = _at->getBuff();
     if (strstr(lBuff, "FAIL")) {
       return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_FAILED_TO_PUBLISH_RAW;
     }
@@ -884,15 +896,15 @@ mqtt_status_t EspATMQTT::pubRaw(uint32_t linkID, const char *topic, char *data,
     size_t len = strlen(data);
 
     snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\",%d,%d,%d", linkID, topic, len, qos, retain);
-    status = at->sendCommand(MQTT_CMD_PUBRAW, buff, NULL);
+    status = _at->sendCommand(MQTT_CMD_PUBRAW, buff, NULL);
     if (status != ESP_AT_SUB_OK) {
       return status;
     }
-    at->waitPrompt(100);
-    at->sendString(data, len);
-    at->waitString(MQTT_STRING_MQTTPUB, 100);
+    _at->waitPrompt(100);
+    _at->sendString(data, len);
+    _at->waitString(MQTT_STRING_MQTTPUB, 100);
 
-    char *lBuff = at->getBuff();
+    char *lBuff = _at->getBuff();
     if (strstr(lBuff, "FAIL")) {
       return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_FAILED_TO_PUBLISH_RAW;
     }
@@ -942,7 +954,7 @@ mqtt_status_t EspATMQTT::subscribeTopic(subscription_cb_t cb, uint32_t linkID,
     snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\",%d", linkID, topic, qos);
     subscription_cb = cb;
     topicSubscriptions++;
-    return at->sendCommand(MQTT_CMD_SUB, buff, NULL);
+    return _at->sendCommand(MQTT_CMD_SUB, buff, NULL);
   }
   return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_IN_DISCONNECTED_STATE;
 }
@@ -988,7 +1000,7 @@ mqtt_status_t EspATMQTT::subscribeTopic(subscription_cb_t cb, uint32_t linkID,
     snprintf(buff, MQTT_BUFFER_SIZE, "=%d,\"%s\",%d", linkID, topic, qos);
     subscription_cb = cb;
     topicSubscriptions++;
-    return at->sendCommand(MQTT_CMD_SUB, buff, NULL);
+    return _at->sendCommand(MQTT_CMD_SUB, buff, NULL);
   }
   return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_IN_DISCONNECTED_STATE;
 }
@@ -1017,7 +1029,7 @@ mqtt_status_t EspATMQTT::unSubscribeTopic(uint32_t linkID, const char * topic) {
       if (!topicSubscriptions)
         subscription_cb = NULL;
     }
-    return at->sendCommand(MQTT_CMD_UNSUB, buff, NULL);
+    return _at->sendCommand(MQTT_CMD_UNSUB, buff, NULL);
   }
   return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_IN_DISCONNECTED_STATE;
 }
@@ -1046,7 +1058,7 @@ mqtt_status_t EspATMQTT::unSubscribeTopic(uint32_t linkID, char * topic) {
       if (!topicSubscriptions)
         subscription_cb = NULL;
     }
-    return at->sendCommand(MQTT_CMD_UNSUB, buff, NULL);
+    return _at->sendCommand(MQTT_CMD_UNSUB, buff, NULL);
   }
   return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_IN_DISCONNECTED_STATE;
 }
@@ -1067,7 +1079,7 @@ mqtt_status_t EspATMQTT::unSubscribeTopic(uint32_t linkID, char * topic) {
 mqtt_status_t EspATMQTT::close(uint32_t linkID) {
   if (connected) {
     snprintf(buff, MQTT_BUFFER_SIZE, "=%d", linkID);
-    return at->sendCommand(MQTT_CMD_CLEAN, buff, NULL);
+    return _at->sendCommand(MQTT_CMD_CLEAN, buff, NULL);
   }
   return ESP_AT_SUB_CMD_PROCESSING | AT_MQTT_IN_DISCONNECTED_STATE;
 }
@@ -1151,7 +1163,7 @@ mqtt_status_t EspATMQTT::enableNTPTime(bool enable, validDateTime_cb_t cb,
         break;
     }
   }
-  return at->sendCommand(AT_CMD_CIPSNTPCFG, buff, NULL);
+  return _at->sendCommand(AT_CMD_CIPSNTPCFG, buff, NULL);
 }
 
 /*******************************************************************************
@@ -1169,7 +1181,7 @@ mqtt_status_t EspATMQTT::enableNTPTime(bool enable, validDateTime_cb_t cb,
  *
  ******************************************************************************/
 mqtt_status_t EspATMQTT::getNTPTime(char **time) {
-  return at->sendCommand(AT_CMD_CIPSNTPTIME, "?", time);
+  return _at->sendCommand(AT_CMD_CIPSNTPTIME, "?", time);
 }
 
 /*******************************************************************************
@@ -1197,21 +1209,21 @@ void EspATMQTT::process() {
   if ((millis() - ntpTimer > 1000) && (ntpTimeValid == false)) {
     ntpTimer = millis();
     // Trigger to the current time. Will later be caught in the URC handler.
-    at->sendString(MQTT_STRING_CIPSNTPTIME);
+    _at->sendString(MQTT_STRING_CIPSNTPTIME);
   }
 
   // URC handler
-  if (at->available()) {
+  if (_at->available()) {
   char ch;
     // The MQTTSUBRECV URC does not have a line ending which means we need to
     // to perform immediate parsing while reading the line.
-    ch = at->read();
+    ch = _at->read();
     if (ch == '+') {
       int ptr = 0;
 
       buff[ptr++] = ch;
       do {
-        ch = at->read();
+        ch = _at->read();
         buff[ptr++] = ch;
       } while (ch != ':');
       buff[ptr] = '\0';
@@ -1221,27 +1233,27 @@ void EspATMQTT::process() {
         // This is so dumb, it is a line based protocol and it should have had
         // cr/lf at the end of the line just like everything else.
         do {
-          ch = at->read();
+          ch = _at->read();
           buff[ptr++] = ch;
         } while (ch != ',' && ch != -1);
 
         // Read the topic
         do {
-          ch = at->read();
+          ch = _at->read();
           buff[ptr++] = ch;
         } while (ch != ',' && ch != -1);
 
         // And at last we get to the number of characters in the response
         int lenPtr = ptr;   // Save a pointer to the length
         do {
-          ch = at->read();
+          ch = _at->read();
           buff[ptr++] = ch;
         } while (ch != ',' && ch != -1);
 
         // Read all the data
         int len = strtol(&buff[lenPtr], NULL, 10);
         while(len--) {
-          ch = at->read();
+          ch = _at->read();
           buff[ptr++] = ch;
         }
         buff[ptr] = '\0';
@@ -1262,7 +1274,7 @@ void EspATMQTT::process() {
       } else if (strstr(&buff[0], AT_RESP_CIPSNTPTIME)) {
         ptr = 0;
         do {
-          ch = at->read();
+          ch = _at->read();
           if (ch != '\r' && ch != '\n')
             buff[ptr++] = ch;
         } while (ch != '\n');
@@ -1278,7 +1290,7 @@ void EspATMQTT::process() {
       } else if (strstr(&buff[0], MQTT_RESP_CONNECTED)) {
         ptr = 0;
         do {
-          ch = at->read();
+          ch = _at->read();
           if (ch != '\r' && ch != '\n')
             buff[ptr++] = ch;
         } while (ch != '\n');
@@ -1289,7 +1301,7 @@ void EspATMQTT::process() {
           connected_cb(&buff[0]);
       } else {
         do {
-          ch = at->read();
+          ch = _at->read();
           if (ch != '\r' && ch != '\n')
             buff[ptr++] = ch;
         } while (ch != '\n');
